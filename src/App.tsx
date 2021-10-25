@@ -1,11 +1,12 @@
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {Todolist} from "./todolist";
+import {taskType, Todolist} from "./todolist";
 import {v1} from "uuid";
-
+import "antd/dist/antd.css";
 
 
 export type FilterValuesType = "all" | "active"| "completed"
+
 
 
 function App() {
@@ -17,8 +18,8 @@ function App() {
          {id: v1(), title: "React", isDone: false},
          {id: v1(), title: "Graph QL", isDone: true}
      ]);
-    console.log(tasks)
 
+    const [filter, setFilter] = useState<FilterValuesType>("all")
 
     function removeTask (id:string) {
        let filteredTasks = tasks.filter(t => t.id !== id)
@@ -27,8 +28,9 @@ function App() {
 
 
     function addTask (title:string) {
-        let newTask = {id: v1(),
-            title: title,
+        let newTask: taskType = {
+            id: v1(),
+            title,// имеется ввиду title:title
             isDone: false
         }
         let newTasks = [newTask, ...tasks];
@@ -37,18 +39,13 @@ function App() {
 
 
 
-    const [filter, setFilter] = useState<FilterValuesType>("all")
-
     let taskForRender = tasks;
-
      if (filter === "active") {
          taskForRender = tasks.filter(t=> !t.isDone);
      }
-
      if (filter === "completed") {
          taskForRender = tasks.filter(t=> t.isDone);
      }
-
      function changeFilter (value:FilterValuesType) {
         setFilter(value)
      }
