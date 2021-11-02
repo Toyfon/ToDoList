@@ -13,23 +13,11 @@
   border-radius: 5px;
   padding: 5px;
   background-color: darkgray;
-  color: gray;
+  color: black;
 }
 
-.Wrapper {
-  display: flex;
-  align-items: center;
-}
 
-.btnRemove {
-  margin-left: auto;
-  flex: none;
-}
 
-.btnAdd {
-  width: 20%;
-  margin-bottom: 5px;
-}
 .btn {
   display: flex;
   justify-content: space-between;
@@ -51,4 +39,17 @@
 
 input.addInput {
   margin-bottom: 5px;
+}
+
+.active-filter {
+  background-color: darkred;
+}
+
+.error {
+  border: 2px solid darkred;
+  outline: none;
+}
+
+.isDone {
+  opacity: 0.5;
 }

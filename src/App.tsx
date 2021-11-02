@@ -19,14 +19,10 @@ function App() {
          {id: v1(), title: "Graph QL", isDone: true}
      ]);
 
-    const [filter, setFilter] = useState<FilterValuesType>("all")
-
     function removeTask (id:string) {
        let filteredTasks = tasks.filter(t => t.id !== id)
         setTasks(filteredTasks)
     }
-
-
     function addTask (title:string) {
         let newTask: taskType = {
             id: v1(),
@@ -36,9 +32,11 @@ function App() {
         let newTasks = [newTask, ...tasks];
         setTasks(newTasks)
     }
+    const changeTaskStatus = (taskId:string, isDone:boolean) => {
+        setTasks(tasks.map(t=> t.id === taskId? {...t, isDone: isDone} : t))
+    }
 
-
-
+    const [filter, setFilter] = useState<FilterValuesType>("all")
     let taskForRender = tasks;
      if (filter === "active") {
          taskForRender = tasks.filter(t=> !t.isDone);
@@ -55,11 +53,12 @@ function App() {
     return (
         <div className="App">
             <Todolist title = {"What to learn"}
+                      filter={filter}
                       tasks = {taskForRender}
                       removeTask = {removeTask}
                       changeFilter = {changeFilter}
                       addTask ={addTask}
-
+                      changeTaskStatus={changeTaskStatus}
             />
 
         </div>
