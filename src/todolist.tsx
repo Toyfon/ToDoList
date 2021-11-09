@@ -10,13 +10,15 @@ export type taskType = {
 }
 
 type toDoListPropsType = {
+    id:string
     filter: FilterValuesType
     title: string
     tasks: Array<taskType>
-    removeTask: (id: string) => void
-    changeFilter: (value: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean) => void
+    removeTask: (taskId: string, todolistId: string) => void
+    changeFilter: (value: FilterValuesType, todolistId: string) => void
+    addTask: (title: string, todolistId: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean,todolistId: string) => void
+    removeTodolist:(todolistId: string) => void
 }
 
 export const Todolist = (props: toDoListPropsType) => {
@@ -25,9 +27,9 @@ export const Todolist = (props: toDoListPropsType) => {
 
     let TaskElement = props.tasks.map(t => {
         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            props.changeTaskStatus(t.id, e.currentTarget.checked)
+            props.changeTaskStatus(t.id, e.currentTarget.checked, props.id)
         }
-        return <li key={t.id} className={t.isDone?"isDone": ""}>
+        return <li key={t.id} className={t.isDone ? "isDone": ""}>
             <input type="checkbox"
                    defaultChecked={t.isDone}
                    onChange={changeTaskStatusHandler}/>
@@ -38,7 +40,7 @@ export const Todolist = (props: toDoListPropsType) => {
 
 
     const onRemoveHandler = (taskId: string) => {
-        props.removeTask(taskId)
+        props.removeTask(taskId, props.id)
     }
     const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTaskTitle(e.currentTarget.value)
@@ -47,7 +49,7 @@ export const Todolist = (props: toDoListPropsType) => {
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(false)
         if (e.key === "Enter" && newTaskTitle.trim()) { //проверка на пробелы и enter
-            props.addTask(newTaskTitle.trim())
+            props.addTask(newTaskTitle.trim(), props.id)
             setNewTaskTitle("")
         } else {
             setError(true)
@@ -56,7 +58,7 @@ export const Todolist = (props: toDoListPropsType) => {
     const addTask = () => {
         let trimTaskTitle = newTaskTitle.trim()
         if (trimTaskTitle) { // проверяем, пустая ли строка, если да, возвращает false и пустая таска не добавляется
-            props.addTask(trimTaskTitle)
+            props.addTask(trimTaskTitle, props.id)
             setNewTaskTitle("")
         } else {
             setError(true)
@@ -64,15 +66,20 @@ export const Todolist = (props: toDoListPropsType) => {
         }
 
     }
-    const changeButtonFilter = (value: FilterValuesType) => {
-        props.changeFilter(value)
+    const changeButtonFilter = (filter: FilterValuesType) => {
+        props.changeFilter(filter, props.id)
     }
     const errorMessage = error ? <div style={{color: "darkred", outline: "none"}}>Title is required!</div> : null
 
+    const removeTodolistHandler = (todolistId: string) => {
+        props.removeTodolist(todolistId)
+    }
 
     return (
         <div className="todolist">
-            <h3>{props.title}</h3>
+            <h3>{props.title}
+                <Button callBack={()=>removeTodolistHandler(props.id)} name={'x'} classes={''}/>
+            </h3>
             <div>
                 <input className={error ? "error" : ""}
                        value={newTaskTitle}
