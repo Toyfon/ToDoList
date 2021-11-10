@@ -3,7 +3,7 @@ import React from "react";
 type ButtonType = {
     callBack: () => void,
     name:string
-    classes: string
+    classes?: string
 
 }
 
