@@ -1,8 +1,10 @@
 import React, {ChangeEvent} from "react";
 import {FilterValuesType} from "./App";
-import {Button} from './components/button'
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
+import IconButton from "@mui/material/IconButton/IconButton";
+import DeleteIcon from '@mui/icons-material/Delete';
+import {Button, Checkbox, List, ListItem, Typography} from "@mui/material";
 
 
 export type taskType = {
@@ -34,7 +36,8 @@ export const Todolist = ({
                              changeTaskStatus,
                              removeTodolist,
                              changeTaskTitle,
-                             changeTodolistTitle}: toDoListPropsType) => {
+                             changeTodolistTitle
+                         }: toDoListPropsType) => {
 
 
     let TaskElement = tasks.map(t => {
@@ -44,13 +47,18 @@ export const Todolist = ({
         const changeTaskTitleHandler = (title: string) => {
             changeTaskTitle(t.id, title, id)
         }
-        return <li key={t.id} className={t.isDone ? "isDone" : ""}>
-            <input type="checkbox"
-                   defaultChecked={t.isDone}
-                   onChange={changeTaskStatusHandler}/>
+        return <ListItem
+            disableGutters
+            divider
+            sx={{paddingTop: "0px,3px", display: "flex", justifyContent: "space-between"}}
+            key={t.id}
+            className={t.isDone ? "isDone" : ""}>
+            <Checkbox checked={t.isDone} color={'secondary'} onChange={changeTaskStatusHandler}/>
             <EditableSpan title={t.title} callBack={changeTaskTitleHandler}/>
-            <Button name={'x'} callBack={() => onRemoveHandler(t.id)}/>
-        </li>
+            <IconButton onClick={() => onRemoveHandler(t.id)} color={"secondary"}>
+                <DeleteIcon/>
+            </IconButton>
+        </ListItem>
     })
 
 
@@ -58,27 +66,28 @@ export const Todolist = ({
     const changeButtonFilter = (filter: FilterValuesType) => changeFilter(filter, id)
     const removeTodolistHandler = (todolistId: string) => removeTodolist(todolistId)
     const callBackHandlerForAddTask = (newTaskTitle: string) => addTask(newTaskTitle, id)
-    const changeTodolistTitleHandler = (title: string) => changeTodolistTitle(title,id)
-
+    const changeTodolistTitleHandler = (title: string) => changeTodolistTitle(title, id)
 
 
     return (
-        <div className="todolist">
-            <h3>
+        <div>
+            <Typography variant="h6" align={'center'}>
                 <EditableSpan title={title} callBack={changeTodolistTitleHandler}/>
-                <Button callBack={() => removeTodolistHandler(id)} name={'x'}/>
-            </h3>
+                <IconButton color={"secondary"} onClick={() => removeTodolistHandler(id)}>
+                    <DeleteIcon/>
+                </IconButton>
+            </Typography>
             <AddItemForm callBack={callBackHandlerForAddTask}/>
-            <ul className="list">
+            <List>
                 {TaskElement}
-            </ul>
-            <div className="btn">
-                <Button classes={filter === 'all' ? "active-filter" : ""}
-                        name={'all'} callBack={() => changeButtonFilter('all')}/>
-                <Button classes={filter === 'active' ? "active-filter" : ""}
-                        name={'active'} callBack={() => changeButtonFilter('active')}/>
-                <Button classes={filter === 'completed' ? "active-filter" : ""}
-                        name={'completed'} callBack={() => changeButtonFilter('completed')}/>
+            </List>
+            <div>
+                <Button variant={filter === 'all' ? "contained" : "text"} color={"secondary"}
+                        onClick={() => changeButtonFilter('all')}>all</Button>
+                <Button variant={filter === 'active' ? "contained" : "text"} color={"secondary"}
+                        onClick={() => changeButtonFilter('active')}>active </Button>
+                <Button variant={filter === 'completed' ? "contained" : "text"} color={"secondary"}
+                        onClick={() => changeButtonFilter('completed')}> completed</Button>
             </div>
         </div>
     )

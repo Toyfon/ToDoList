@@ -1,55 +1,5 @@
-.App {
-  padding: 30px;
-  display: flex;
-}
 
-.App > div {
-  margin-right: 200px;
-}
-
-
-.todolist {
-  border: 2px solid gray;
-  border-radius: 5px;
-  padding: 5px;
-  background-color: darkgray;
-  color: black;
-}
-
-
-
-.btn {
-  display: flex;
-  justify-content: space-between;
-}
-
-.list {
-  margin: 0 0 5px 0;
-  padding: 0;
-  list-style: none;
-}
-
-.list li {
-  display: flex;
-  align-items: center;
-  padding: 5px 20px 5px 0;
-
-}
-
-
-input.addInput {
-  margin-bottom: 5px;
-}
-
-.active-filter {
-  background-color: darkred;
-}
-
-.error {
-  border: 2px solid darkred;
-  outline: none;
-}
 
 .isDone {
-  opacity: 0.5;
+    opacity: 50%;
 }

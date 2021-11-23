@@ -1,10 +1,10 @@
-import React, {useState} from "react";
-import {Button} from './components/button'
-import {Input} from "./components/Input";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {IconButton, TextField} from "@mui/material";
+import {AddBox} from "@mui/icons-material";
 
 
 type AddItemFormPropsType = {
-    callBack: (value:string) => void
+    callBack: (value: string) => void
 }
 
 export const AddItemForm = ({
@@ -16,9 +16,8 @@ export const AddItemForm = ({
     const [error, setError] = useState<boolean>(false)
 
 
-    const errorMessage = error ? <div style={{color: "darkred", outline: "none"}}>Title is required!</div> : null
 
-    const addItem = (newTaskTitle:string) => {
+    const addItem = (newTaskTitle: string) => {
         if (newTaskTitle.trim()) {
             callBack(newTaskTitle)
             setNewTaskTitle("")
@@ -27,15 +26,42 @@ export const AddItemForm = ({
         }
     }
 
-    return (
 
+    const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTaskTitle(e.currentTarget.value)
+        setError(false)
+    }
+    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        setError(false)
+        if (e.key === "Enter" && newTaskTitle.trim()) { //проверка на пробелы и enter
+            callBack(newTaskTitle)
+            setNewTaskTitle("")
+        } else {
+            setError(true)
+        }
+    }
+    return (
         <div>
-            <Input error={error} setError={setError}
-                   newTaskTitle={newTaskTitle}
-                   setNewTaskTitle={setNewTaskTitle}
-                   callback={addItem}/>
-            {errorMessage}
-            <Button name={'+'} callBack={()=>addItem(newTaskTitle)}/>
+            <TextField variant={"outlined"}
+                       value={newTaskTitle}
+                       size={"small"}
+                       onChange={onChangeTitleHandler}
+                       onKeyPress={onKeyPressHandler}
+                       error={error}
+                       helperText={error && "Title is required!"}
+                       label={'title'}
+                       color={"secondary"}
+                       sx={{
+                           input: {
+                               height: "20px"
+                           }
+                       }}
+            />
+
+            <IconButton onClick={() => addItem(newTaskTitle)} color={"secondary"}>
+                <AddBox color={"inherit"}/>
+            </IconButton>
+
         </div>
     )
 }

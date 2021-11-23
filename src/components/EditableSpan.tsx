@@ -1,9 +1,11 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {IconButton, TextField} from "@mui/material";
+import {ModeEditOutline} from "@mui/icons-material";
 
 
 type EditableSpanPropsType = {
     title: string
-    callBack: (title:string) => void
+    callBack: (title: string) => void
 }
 
 export const EditableSpan = (props: EditableSpanPropsType) => {
@@ -23,16 +25,27 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
     const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
     }
+    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            offEditMode()
+        }
+    }
 
 
     return (
         editMode
-            ? <input value={title}
-                     onBlur={offEditMode}
-                     autoFocus={true}
-                     onChange={onChangeTitleHandler}/>
+            ? <TextField variant={'standard'}
+                         sx={{width: "130px"}}
+                         value={title}
+                         color={"secondary"}
+                         onBlur={offEditMode}
+                         autoFocus
+                         onChange={onChangeTitleHandler}
+                         onKeyPress={onKeyPressHandler}/>
             : <span onDoubleClick={onEditMode}>{props.title}
-                <button onClick={onEditMode}>edit</button>
+                <IconButton onClick={onEditMode}>
+                    <ModeEditOutline fontSize={"small"}/>
+                </IconButton>
         </span>
     )
 }
