@@ -47,7 +47,6 @@ function App() {
         setTasks({...tasks})
         /*setTasks({...tasks, [todolistId]:tasks[todolistId].filter(t => t.id !== todolistId)})*/// можно записать так
     }
-
     function addTask(title: string, todolistId: string) {
         let newTask: taskType = {
             id: v1(),

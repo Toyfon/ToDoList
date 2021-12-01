@@ -45,12 +45,12 @@ export const AddItemForm = ({
             <TextField variant={"outlined"}
                        value={newTaskTitle}
                        size={"small"}
+                       color={'secondary'}
                        onChange={onChangeTitleHandler}
                        onKeyPress={onKeyPressHandler}
                        error={error}
                        helperText={error && "Title is required!"}
                        label={'title'}
-                       color={"secondary"}
                        sx={{
                            input: {
                                height: "20px"
