@@ -1,10 +1,10 @@
 import React, {ChangeEvent} from "react";
-import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, Checkbox, List, ListItem, Typography} from "@mui/material";
+import {FilterValuesType} from "./Redux/todo-reducer";
 
 
 export type taskType = {
@@ -41,6 +41,7 @@ export const Todolist = ({
 
 
     let TaskElement = tasks.map(t => {
+        debugger
         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
             changeTaskStatus(t.id, e.currentTarget.checked, id)
         }
