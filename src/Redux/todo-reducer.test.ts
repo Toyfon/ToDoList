@@ -1,10 +1,10 @@
 import {v1} from "uuid";
-import  from "../App";
+
 import {
     addTodoListAC,
     changeTodoListFilterAC,
     changeTodoListTitleAC,
-    removeTodoListAC,
+    removeTodoListAC, TodolistType,
     toDoReducer
 } from "./todo-reducer";
 

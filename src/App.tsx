@@ -24,9 +24,6 @@ import {useTypedSelector} from "./Redux/Redux-store";
 import {useDispatch} from "react-redux";
 
 
-
-
-
 function App() {
 
     const todoLists = useTypedSelector<TodolistType[]>(state => state.todoLists)

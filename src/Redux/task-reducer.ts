@@ -8,7 +8,7 @@ export type TaskStateType = {
 }
 
 
-let initialState: TaskStateType = {
+export let initialState: TaskStateType = {
     [todoListId_1]: [
         {id: v1(), title: "HTML", isDone: false},
         {id: v1(), title: "Css", isDone: true},
