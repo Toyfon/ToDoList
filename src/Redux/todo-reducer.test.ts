@@ -8,16 +8,24 @@ import {
     toDoReducer
 } from "./todo-reducer";
 
+let todoListId_1:string
+let todoListId_2: string
+let startState : TodolistType[]
 
-test('correct todolist should be removed', () => {
+beforeEach(() => {
+    todoListId_1 = v1()
+    todoListId_2 = v1()
 
-    let todoListId_1 = v1()
-    let todoListId_2 = v1()
-
-    const startState: TodolistType[] = [
+   startState = [
         {id: todoListId_1, title: 'What to learn', filter: 'all'},
         {id: todoListId_2, title: 'What to buy', filter: 'all'}
     ]
+})
+
+
+
+test('correct todolist should be removed', () => {
+
 
     const endState = toDoReducer(startState, removeTodoListAC(todoListId_1))
 
@@ -27,15 +35,10 @@ test('correct todolist should be removed', () => {
 
 test('correct todolist should be added', () => {
 
-    let todoListId_1 = v1()
-    let todoListId_2 = v1()
+
 
     let newTodolistTitle = 'New Todolist'
 
-    const startState: TodolistType[] = [
-        {id: todoListId_1, title: 'What to learn', filter: 'all'},
-        {id: todoListId_2, title: 'What to buy', filter: 'all'}
-    ]
 
     const endState = toDoReducer(startState,addTodoListAC(newTodolistTitle,v1()))
 
@@ -45,15 +48,8 @@ test('correct todolist should be added', () => {
 
 test('correct todolist should change its name', () => {
 
-    let todoListId_1 = v1()
-    let todoListId_2 = v1()
 
     let newTodolistTitle = 'New Todolist'
-
-    const startState: TodolistType[] = [
-        {id: todoListId_1, title: 'What to learn', filter: 'all'},
-        {id: todoListId_2, title: 'What to buy', filter: 'all'}
-    ]
 
     const endState = toDoReducer(startState,changeTodoListTitleAC(todoListId_2,newTodolistTitle))
 
@@ -64,14 +60,6 @@ test('correct todolist should change its name', () => {
 
 test('correct todolist should change its filter value', () => {
 
-    let todoListId_1 = v1()
-    let todoListId_2 = v1()
-
-
-    const startState: TodolistType[] = [
-        {id: todoListId_1, title: 'What to learn', filter: 'all'},
-        {id: todoListId_2, title: 'What to buy', filter: 'all'}
-    ]
 
     const endState = toDoReducer(startState,changeTodoListFilterAC(todoListId_2,'completed'))
 

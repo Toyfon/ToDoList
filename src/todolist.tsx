@@ -70,6 +70,7 @@ export const Todolist = ({
     const changeTodolistTitleHandler = (title: string) => changeTodolistTitle(title, id)
 
 
+
     return (
         <div>
             <Typography variant="h6" align={'center'}>
