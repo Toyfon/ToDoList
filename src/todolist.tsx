@@ -1,10 +1,11 @@
-import React, {ChangeEvent} from "react";
+import React, {useCallback} from "react";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Button, Checkbox, List, ListItem, Typography} from "@mui/material";
+import {Button, List, Typography} from "@mui/material";
 import {FilterValuesType} from "./Redux/todo-reducer";
+import {Task} from "./components/Task/Task";
 
 
 export type taskType = {
@@ -27,55 +28,63 @@ type toDoListPropsType = {
     changeTodolistTitle: (title: string, todolistId: string) => void
 }
 
-export const Todolist = ({
-                             id, filter,
-                             title, tasks,
-                             removeTask,
-                             changeFilter,
-                             addTask,
-                             changeTaskStatus,
-                             removeTodolist,
-                             changeTaskTitle,
-                             changeTodolistTitle
-                         }: toDoListPropsType) => {
+export const Todolist = React.memo(({
+                                        id, filter,
+                                        title, tasks,
+                                        removeTask,
+                                        changeFilter,
+                                        addTask,
+                                        changeTaskStatus,
+                                        removeTodolist,
+                                        changeTaskTitle,
+                                        changeTodolistTitle
+                                    }: toDoListPropsType) => {
 
 
-    let TaskElement = tasks.map(t => {
-        debugger
-        const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            changeTaskStatus(t.id, e.currentTarget.checked, id)
-        }
-        const changeTaskTitleHandler = (title: string) => {
-            changeTaskTitle(t.id, title, id)
-        }
-        return <ListItem
-            disableGutters
-            divider
-            sx={{paddingTop: "0px,3px", display: "flex", justifyContent: "space-between"}}
-            key={t.id}
-            className={t.isDone ? "isDone" : ""}>
-            <Checkbox checked={t.isDone} color={'secondary'} onChange={changeTaskStatusHandler}/>
-            <EditableSpan title={t.title} callBack={changeTaskTitleHandler}/>
-            <IconButton onClick={() => onRemoveHandler(t.id)} color={"secondary"}>
-                <DeleteIcon/>
-            </IconButton>
-        </ListItem>
+    const onRemoveHandler = useCallback((taskId: string) => removeTask(taskId, id), [removeTask, id])
+    const changeButtonFilter = useCallback((filter: FilterValuesType) => changeFilter(filter, id), [changeFilter, id])
+    const removeTodolistHandler = useCallback(() => {
+        removeTodolist(id)},[removeTodolist,id])
+    const callBackHandlerForAddTask = useCallback((newTaskTitle: string) => {
+        addTask(newTaskTitle, id)
+    }, [addTask, id])
+    const changeTodolistTitleHandler = useCallback((title: string) => {
+        changeTodolistTitle(title, id)
+    },[changeTodolistTitle,id])
+
+    const changeTaskStatusCallback = useCallback((taskId: string, value: boolean) => {
+        changeTaskStatus(taskId, value, id)
+    }, [changeTaskStatus, id])
+
+    const changeTaskTitleCallback = useCallback((taskId: string, title: string) => {
+        changeTaskTitle(taskId, title, id)
+    }, [changeTaskTitle, id])
+
+
+
+    let taskForTodolist = tasks;
+    if (filter === "active") {
+        taskForTodolist = tasks.filter(t => !t.isDone);
+    }
+    if (filter === "completed") {
+        taskForTodolist = tasks.filter(t => t.isDone);
+    }
+
+
+    let TaskElement = taskForTodolist.map(t => {
+        return <Task changeTaskStatusCallback={changeTaskStatusCallback}
+                     task={t}
+                     changeTaskTitleCallback={changeTaskTitleCallback}
+                     onRemoveHandler={onRemoveHandler}
+                     key={t.id}/>
     })
-
-
-    const onRemoveHandler = (taskId: string) => removeTask(taskId, id)
-    const changeButtonFilter = (filter: FilterValuesType) => changeFilter(filter, id)
-    const removeTodolistHandler = (todolistId: string) => removeTodolist(todolistId)
-    const callBackHandlerForAddTask = (newTaskTitle: string) => addTask(newTaskTitle, id)
-    const changeTodolistTitleHandler = (title: string) => changeTodolistTitle(title, id)
-
 
 
     return (
         <div>
             <Typography variant="h6" align={'center'}>
                 <EditableSpan title={title} callBack={changeTodolistTitleHandler}/>
-                <IconButton color={"secondary"} onClick={() => removeTodolistHandler(id)}>
+                <IconButton color={"secondary"} onClick={removeTodolistHandler}>
                     <DeleteIcon/>
                 </IconButton>
             </Typography>
@@ -93,4 +102,4 @@ export const Todolist = ({
             </div>
         </div>
     )
-}
+})

@@ -7,37 +7,39 @@ type AddItemFormPropsType = {
     callBack: (value: string) => void
 }
 
-export const AddItemForm = ({
+export const AddItemForm = React.memo( ({
                                 callBack,
                                 ...props
                             }: AddItemFormPropsType) => {
+    console.log('called')
 
     const [newTaskTitle, setNewTaskTitle] = useState("")
-    const [error, setError] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
 
 
 
-    const addItem = (newTaskTitle: string) => {
+    const addItem = () => {
         if (newTaskTitle.trim()) {
             callBack(newTaskTitle)
             setNewTaskTitle("")
         } else {
-            setError(true)
+            setError('Title is required')
         }
     }
 
 
     const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTaskTitle(e.currentTarget.value)
-        setError(false)
+        setError(null)
     }
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(false)
+        if(error !== null)
+        setError(null)
         if (e.key === "Enter" && newTaskTitle.trim()) { //проверка на пробелы и enter
             callBack(newTaskTitle)
             setNewTaskTitle("")
         } else {
-            setError(true)
+            setError('Title is required')
         }
     }
     return (
@@ -48,7 +50,7 @@ export const AddItemForm = ({
                        color={'secondary'}
                        onChange={onChangeTitleHandler}
                        onKeyPress={onKeyPressHandler}
-                       error={error}
+                       error={!!error}
                        helperText={error && "Title is required!"}
                        label={'title'}
                        sx={{
@@ -58,10 +60,10 @@ export const AddItemForm = ({
                        }}
             />
 
-            <IconButton onClick={() => addItem(newTaskTitle)} color={"secondary"}>
+            <IconButton onClick={addItem} color={"secondary"}>
                 <AddBox color={"inherit"}/>
             </IconButton>
 
         </div>
     )
-}
+})

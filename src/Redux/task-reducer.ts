@@ -1,6 +1,6 @@
 import {taskType} from "../todolist";
 import {v1} from "uuid";
-import {todoListId_1, todoListId_2} from "./todo-reducer";
+
 
 
 export type TaskStateType = {
@@ -9,14 +9,14 @@ export type TaskStateType = {
 
 
 export let initialState: TaskStateType = {
-    [todoListId_1]: [
-        {id: v1(), title: "HTML", isDone: false},
-        {id: v1(), title: "Css", isDone: true},
-    ],
-    [todoListId_2]: [
-        {id: v1(), title: "Meat", isDone: false},
-        {id: v1(), title: "Beer", isDone: true},
-    ]
+    // [todoListId_1]: [
+    //     {id: v1(), title: "HTML", isDone: false},
+    //     {id: v1(), title: "Css", isDone: true},
+    // ],
+    // [todoListId_2]: [
+    //     {id: v1(), title: "Meat", isDone: false},
+    //     {id: v1(), title: "Beer", isDone: true},
+    // ]
 }
 
 export const taskReducer = (state = initialState, action: ActionType): TaskStateType => {

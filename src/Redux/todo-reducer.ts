@@ -9,13 +9,13 @@ export type TodolistType = {
     title: string
     filter: FilterValuesType
 }
-export const todoListId_1 = v1()
-export const todoListId_2 = v1()
+// export const todoListId_1 = v1()
+// export const todoListId_2 = v1()
 
 
 let initialState: Array<TodolistType> = [
-    {id: todoListId_1, title: 'What to learn', filter: 'all'},
-    {id: todoListId_2, title: 'What to buy', filter: 'all'}
+    // {id: todoListId_1, title: 'What to learn', filter: 'all'},
+    // {id: todoListId_2, title: 'What to buy', filter: 'all'}
 ]
 
 
