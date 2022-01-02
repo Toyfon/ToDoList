@@ -35,7 +35,7 @@ export const AddItemForm = React.memo( ({
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if(error !== null)
         setError(null)
-        if (e.key === "Enter" && newTaskTitle.trim()) { //проверка на пробелы и enter
+        if (e.key === "Enter" && newTaskTitle.trim()) {
             callBack(newTaskTitle)
             setNewTaskTitle("")
         } else {

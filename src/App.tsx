@@ -71,7 +71,7 @@ function App() {
                         id={tl.id}
                         title={tl.title}
                         filter={tl.filter}
-                        tasks={tasks[tl.id]}
+                        tasks={tasks[tl.id ]}
                         removeTask={removeTask}
                         changeFilter={changeFilter}
                         addTask={addTask}

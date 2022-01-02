@@ -9,14 +9,7 @@ export type TaskStateType = {
 
 
 export let initialState: TaskStateType = {
-    // [todoListId_1]: [
-    //     {id: v1(), title: "HTML", isDone: false},
-    //     {id: v1(), title: "Css", isDone: true},
-    // ],
-    // [todoListId_2]: [
-    //     {id: v1(), title: "Meat", isDone: false},
-    //     {id: v1(), title: "Beer", isDone: true},
-    // ]
+
 }
 
 export const taskReducer = (state = initialState, action: ActionType): TaskStateType => {
