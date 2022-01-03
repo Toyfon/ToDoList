@@ -6,9 +6,10 @@ import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography}
 import MenuIcon from '@mui/icons-material/Menu';
 import './App.css'
 import {
-    addTodoListAC,
     changeTodoListFilterAC,
-    changeTodoListTitleAC, FilterValuesType,
+    changeTodoListTitleAC,
+    createTodolist,
+    FilterValuesType,
     removeTodoListAC,
     TodolistType
 } from "./Redux/todo-reducer";
@@ -26,7 +27,7 @@ import {useDispatch} from "react-redux";
 
 function App() {
 
-    const todoLists = useTypedSelector<TodolistType[]>(state => state.todoLists)
+    const todoLists = useTypedSelector<TodolistType[]>(state => state.todoLists.todos)
     const tasks = useTypedSelector<TaskStateType>(state => state.tasks)
 
     const dispatch = useDispatch()
@@ -57,10 +58,15 @@ function App() {
     }, [dispatch])
     const addTodolist = useCallback((title: string) => {
         const todoListId = v1()
-        dispatch(addTodoListAC(title, todoListId))
+        dispatch(createTodolist(title,todoListId))
         dispatch(addArrayTaskAC(todoListId))
     }, [dispatch])
 
+
+
+    // useEffect(()=>{
+    //     dispatch(getTodoLists())
+    // },[dispatch])
 
     const todolistComponents = todoLists.map(tl => {
 

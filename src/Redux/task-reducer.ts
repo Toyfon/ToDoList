@@ -1,5 +1,7 @@
 import {taskType} from "../todolist";
 import {v1} from "uuid";
+import {tasksAPI} from "../api/tasksApi";
+import {Dispatch} from "redux";
 
 
 
@@ -108,3 +110,10 @@ export type addArrayTaskACType = ReturnType<typeof addArrayTaskAC>
 export const addArrayTaskAC = (todoListId: string) => ({type: 'ADD-ARRAY-TASK', payload: {todoListId}} as const)
 
 
+
+
+
+export const getTasks = (todoListId:string) => async (dispatch:Dispatch) => {
+    let data = await tasksAPI.getTasks(todoListId)
+
+}

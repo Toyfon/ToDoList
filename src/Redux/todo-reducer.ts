@@ -1,7 +1,5 @@
-import {v1} from "uuid";
-
-
-
+import {Dispatch} from "redux";
+import {toDoAPI} from "../api/todoApi";
 
 export type FilterValuesType = "all" | "active" | "completed"
 export type TodolistType = {
@@ -9,45 +7,52 @@ export type TodolistType = {
     title: string
     filter: FilterValuesType
 }
-// export const todoListId_1 = v1()
-// export const todoListId_2 = v1()
 
 
-let initialState: Array<TodolistType> = [
-    // {id: todoListId_1, title: 'What to learn', filter: 'all'},
-    // {id: todoListId_2, title: 'What to buy', filter: 'all'}
-]
+let initialState = {
+    todos: [] as Array<TodolistType>
+}
+export type InitStateType = typeof initialState
 
-
-export const toDoReducer = (state = initialState, action: ActionType): TodolistType[] => {
+export const toDoReducer = (state = initialState, action: ActionType): InitStateType => {
     switch (action.type) {
         case "REMOVE-TODOLIST":
-            console.log("REMOVE-TODOLIST")
-            return state.filter(tl => tl.id !== action.payload.id)
+            return {
+                ...state,
+                todos: state.todos.filter(tl => tl.id !== action.payload.id)
+            }
         case "ADD-TODOLIST":
-            console.log("ADD-TODOLIST")
             let newTodolist: TodolistType = {
                 ...action.payload,
                 filter: "all"
             }
-            return [...state, newTodolist]
+            return {
+                ...state,
+                todos: [...state.todos, newTodolist]
+            }
         case "CHANGE-TODOLIST_TITLE":
-            console.log("CHANGE-TODOLIST_TITLE")
-            return [...state
-                .map(s => s.id === action.payload.id
-                    ?
-                    {...s, title: action.payload.title}
-                    : s)
-            ]
+            return {
+                ...state,
+                todos: state.todos
+                    .map(s => s.id === action.payload.id
+                        ?
+                        {...s, title: action.payload.title}
+                        : s)
+            }
         case "CHANGE-TODOLIST_FILTER":
-            console.log("CHANGE-TODOLIST_FILTER")
-            return [...state
-                .map(s => s.id === action.payload.id
-                    ?
-                    {...s, filter: action.payload.filter}
-                    : s)
-            ]
-
+            return {
+                ...state,
+                todos: state.todos
+                    .map(s => s.id === action.payload.id
+                        ?
+                        {...s, filter: action.payload.filter}
+                        : s)
+            }
+        case "SET-TODOS":
+            debugger
+            return {
+                ...state, todos: action.todos
+            }
         default:
             return state
     }
@@ -57,10 +62,11 @@ export const toDoReducer = (state = initialState, action: ActionType): TodolistT
 export type ActionType = ReturnType<typeof removeTodoListAC> |
     ReturnType<typeof addTodoListAC> |
     ReturnType<typeof changeTodoListTitleAC> |
-    ReturnType<typeof changeTodoListFilterAC>
+    ReturnType<typeof changeTodoListFilterAC> | ReturnType<typeof setTodoListsAC>
 
 
 export const removeTodoListAC = (id: string) => ({type: "REMOVE-TODOLIST", payload: {id}} as const)
+export const setTodoListsAC = (todos: Array<any>) => ({type: "SET-TODOS", todos} as const)
 export const addTodoListAC = (title: string, id: string) => ({type: "ADD-TODOLIST", payload: {title, id}} as const)
 export const changeTodoListTitleAC = (id: string, title: string) => ({
     type: "CHANGE-TODOLIST_TITLE",
@@ -75,3 +81,23 @@ export const changeTodoListFilterAC = (id: string, filter: FilterValuesType) => 
         id
     }
 } as const)
+
+
+
+
+export const getTodoLists = () => async (dispatch: Dispatch) => {
+    let response = await toDoAPI.getTodos()
+    dispatch(setTodoListsAC(response.data))
+}
+
+export const createTodolist = (title:string, id:string) => async (dispatch:Dispatch) => {
+    let data = await toDoAPI.createTodo(title)
+    dispatch(addTodoListAC(data.data.item.title, id))
+}
+
+
+export const deleteTodoList = (todolistId:string) => async (dispatch:Dispatch) => {
+    let response = await toDoAPI.deleteTodo(todolistId)
+}
+
+

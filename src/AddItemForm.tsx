@@ -11,7 +11,6 @@ export const AddItemForm = React.memo( ({
                                 callBack,
                                 ...props
                             }: AddItemFormPropsType) => {
-    console.log('called')
 
     const [newTaskTitle, setNewTaskTitle] = useState("")
     const [error, setError] = useState<string | null>(null)
