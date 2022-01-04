@@ -49,7 +49,6 @@ export const toDoReducer = (state = initialState, action: ActionType): InitState
                         : s)
             }
         case "SET-TODOS":
-            debugger
             return {
                 ...state, todos: action.todos
             }
@@ -60,9 +59,10 @@ export const toDoReducer = (state = initialState, action: ActionType): InitState
 
 
 export type ActionType = ReturnType<typeof removeTodoListAC> |
-    ReturnType<typeof addTodoListAC> |
-    ReturnType<typeof changeTodoListTitleAC> |
-    ReturnType<typeof changeTodoListFilterAC> | ReturnType<typeof setTodoListsAC>
+                         ReturnType<typeof addTodoListAC> |
+                         ReturnType<typeof changeTodoListTitleAC> |
+                         ReturnType<typeof changeTodoListFilterAC> |
+                         ReturnType<typeof setTodoListsAC>
 
 
 export const removeTodoListAC = (id: string) => ({type: "REMOVE-TODOLIST", payload: {id}} as const)
@@ -83,21 +83,36 @@ export const changeTodoListFilterAC = (id: string, filter: FilterValuesType) => 
 } as const)
 
 
-
-
 export const getTodoLists = () => async (dispatch: Dispatch) => {
-    let response = await toDoAPI.getTodos()
-    dispatch(setTodoListsAC(response.data))
+    try {
+        let response = await toDoAPI.getTodos()
+        dispatch(setTodoListsAC(response.data))
+    } catch (e:any) {
+    throw new Error ('ERROR')
+    }
 }
 
-export const createTodolist = (title:string, id:string) => async (dispatch:Dispatch) => {
-    let data = await toDoAPI.createTodo(title)
-    dispatch(addTodoListAC(data.data.item.title, id))
-}
 
 
-export const deleteTodoList = (todolistId:string) => async (dispatch:Dispatch) => {
-    let response = await toDoAPI.deleteTodo(todolistId)
-}
+
+
+
+
+
+
+
+
+
+
+//
+// export const createTodolist = (title:string, id:string) => async (dispatch:Dispatch) => {
+//     let data = await toDoAPI.createTodo(title)
+//     dispatch(addTodoListAC(data.data.item.title, id))
+// }
+//
+//
+// export const deleteTodoList = (todolistId:string) => async (dispatch:Dispatch) => {
+//     let response = await toDoAPI.deleteTodo(todolistId)
+// }
 
 

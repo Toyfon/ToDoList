@@ -1,18 +1,15 @@
-import {taskType} from "../todolist";
-import {v1} from "uuid";
 import {tasksAPI} from "../api/tasksApi";
 import {Dispatch} from "redux";
-
+import {v1} from "uuid";
+import {taskType} from "../todolist";
 
 
 export type TaskStateType = {
-    [key: string]: taskType[]
+    [key: string]: Array<taskType>
 }
 
 
-export let initialState: TaskStateType = {
-
-}
+export let initialState: TaskStateType = {}
 
 export const taskReducer = (state = initialState, action: ActionType): TaskStateType => {
     switch (action.type) {
@@ -58,6 +55,15 @@ export const taskReducer = (state = initialState, action: ActionType): TaskState
                 [action.payload.todoListId]: []
             }
         }
+        case "SET_TASKS": {
+                const copyState = {...state}
+                copyState[action.payload.todoListId] = action.payload.tasks
+                return copyState
+                // ...state,
+                // [action.payload.todoListId]: action.payload.tasks
+            }
+
+
         default:
             return state
     }
@@ -65,10 +71,10 @@ export const taskReducer = (state = initialState, action: ActionType): TaskState
 
 
 export type ActionType = removeTaskACType |
-                         addTaskACType |
-                         changeTaskStatusACType |
-                         changeTaskTitleACType |
-                         addArrayTaskACType
+    addTaskACType |
+    changeTaskStatusACType |
+    changeTaskTitleACType |
+    addArrayTaskACType | setTaskACType
 
 export type removeTaskACType = ReturnType<typeof removeTaskAC>
 export const removeTaskAC = (taskId: string, todolistId: string) => (
@@ -109,11 +115,21 @@ export const changeTaskTitleAC = (taskId: string, title: string, todolistId: str
 export type addArrayTaskACType = ReturnType<typeof addArrayTaskAC>
 export const addArrayTaskAC = (todoListId: string) => ({type: 'ADD-ARRAY-TASK', payload: {todoListId}} as const)
 
+export type setTaskACType = ReturnType<typeof setTaskAC>
+export const setTaskAC = (tasks: Array<any>, todoListId: string) => ({
+    type: 'SET_TASKS',
+    payload: {tasks, todoListId}
+} as const)
 
 
 
 
-export const getTasks = (todoListId:string) => async (dispatch:Dispatch) => {
-    let data = await tasksAPI.getTasks(todoListId)
+export const getTasks = (todoListId: string) => async (dispatch: Dispatch) => {
+    try {
+        let data = await tasksAPI.getTasks(todoListId)
+        dispatch(setTaskAC(data.items, todoListId))
 
+    } catch (e:any) {
+        console.warn(e)
+    }
 }

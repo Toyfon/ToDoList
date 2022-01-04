@@ -19,3 +19,6 @@ export type AppStoreType= typeof store
 
 
 export const useTypedSelector: TypedUseSelectorHook<rootReducerType> = useSelector;
+
+//@ts-ignore
+window.store = store

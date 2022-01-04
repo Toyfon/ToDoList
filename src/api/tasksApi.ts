@@ -12,29 +12,33 @@ const instance = axios.create({
 
 export const tasksAPI = {
     getTasks(todolistId:string) {
-        return instance.get<Array<TaskType>>(`/todo-lists/${todolistId}/tasks`).then(res => res.data)
+        return instance.get<ResponseTasksType>(`/todo-lists/${todolistId}/tasks`).then(res => res.data)
     },
     createTask(todolistId:string,title:string) {
-        return instance.post<CommonResponseType<{item:TaskType}>>(`/todo-lists/${todolistId}/tasks`,{title})
+        return instance.post(`/todo-lists/${todolistId}/tasks`,{title})
     },
     updateTaskTitle(todolistId:string, taskId:string, title:string) {
-        return instance.put<CommonResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`,{title})
+        return instance.put(`/todo-lists/${todolistId}/tasks/${taskId}`,{title})
     },
     deleteTask (todolistId:string, taskId:string) {
-        return instance.delete<CommonResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
+        return instance.delete(`/todo-lists/${todolistId}/tasks/${taskId}`)
     }
 }
 
 
+export type ResponseTasksType = {
+    totalCount: string
+    error: string
+    items:ResponseTaskType []
+}
 
 type CommonResponseType<T = {}> = {
-    resultCode: number
-    messages: string []
-    fieldsErrors: string []
+    totalCount: string
+    error: string
     data: T
 }
 
-type TaskType = {
+export type ResponseTaskType = {
     description:string
     title: string
     completed:boolean
@@ -48,3 +52,9 @@ type TaskType = {
     addedDate: string
 }
 
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
+}

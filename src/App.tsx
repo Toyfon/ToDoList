@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Todolist} from "./todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
@@ -6,10 +6,10 @@ import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography}
 import MenuIcon from '@mui/icons-material/Menu';
 import './App.css'
 import {
+    addTodoListAC,
     changeTodoListFilterAC,
     changeTodoListTitleAC,
-    createTodolist,
-    FilterValuesType,
+    FilterValuesType, getTodoLists,
     removeTodoListAC,
     TodolistType
 } from "./Redux/todo-reducer";
@@ -58,18 +58,20 @@ function App() {
     }, [dispatch])
     const addTodolist = useCallback((title: string) => {
         const todoListId = v1()
-        dispatch(createTodolist(title,todoListId))
+        dispatch(addTodoListAC(title, todoListId))
         dispatch(addArrayTaskAC(todoListId))
     }, [dispatch])
 
 
 
-    // useEffect(()=>{
-    //     dispatch(getTodoLists())
-    // },[dispatch])
+    useEffect(() => {
+        dispatch(getTodoLists())
+    }, [])
 
+    console.log("render APP")
     const todolistComponents = todoLists.map(tl => {
 
+        let tasksForRender = tasks[tl.id]
         return (<Grid item key={tl.id}>
                 <Paper elevation={2} sx={{padding: "10px"}}>
                     <Todolist
@@ -77,7 +79,7 @@ function App() {
                         id={tl.id}
                         title={tl.title}
                         filter={tl.filter}
-                        tasks={tasks[tl.id ]}
+                        tasks={tasksForRender}
                         removeTask={removeTask}
                         changeFilter={changeFilter}
                         addTask={addTask}
