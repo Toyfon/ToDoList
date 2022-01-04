@@ -12,14 +12,14 @@ export const toDoAPI = {
     getTodos() {
         return instance.get<Array<TodoType>>('/todo-lists')
     },
-    createTodo (title:string) {
-        return instance.post<CommonResponseType<{item: TodoType}>>(`/todo-lists`, {title})
+    createTodo(title: string) {
+        return instance.post<CommonResponseType<{ item: TodoType }>>(`/todo-lists`, {title})
             .then(res => res.data)
     },
-    deleteTodo (todolistId:string) {
+    deleteTodo(todolistId: string) {
         return instance.delete<CommonResponseType>(`/todo-lists/${todolistId}`)
     },
-    updateTodoTitle (todolistId:string, title:string) {
+    updateTodoTitle(todolistId: string, title: string) {
         return instance.put<CommonResponseType>(`/todo-lists/${todolistId}`, {title})
     }
 }

@@ -15,10 +15,8 @@ import {
 } from "./Redux/todo-reducer";
 import {
     addArrayTaskAC,
-    addTaskAC,
     changeTaskStatusAC,
-    changeTaskTitleAC,
-    removeTaskAC,
+    changeTaskTitleAC, createFetchedTask, deleteTask,
     TaskStateType
 } from "./Redux/task-reducer";
 import {useTypedSelector} from "./Redux/Redux-store";
@@ -34,10 +32,10 @@ function App() {
 
 
     const removeTask = useCallback((taskId: string, todolistId: string) => {
-        dispatch(removeTaskAC(taskId, todolistId))
+        dispatch(deleteTask(taskId, todolistId))
     }, [dispatch])
     const addTask = useCallback((title: string, todolistId: string) => {
-        dispatch(addTaskAC(title, todolistId))
+        dispatch(createFetchedTask(title, todolistId))
     }, [dispatch])
     const changeTaskStatus = useCallback((taskId: string, isDone: boolean, todolistId: string) => {
         dispatch(changeTaskStatusAC(taskId, isDone, todolistId))
@@ -63,12 +61,10 @@ function App() {
     }, [dispatch])
 
 
-
     useEffect(() => {
         dispatch(getTodoLists())
     }, [])
 
-    console.log("render APP")
     const todolistComponents = todoLists.map(tl => {
 
         let tasksForRender = tasks[tl.id]

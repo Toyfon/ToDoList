@@ -15,7 +15,7 @@ export type rootReducerType = ReturnType<typeof rootReducer>
 
 
 export let store = createStore(rootReducer, applyMiddleware(thunk))
-export type AppStoreType= typeof store
+export type AppStoreType = typeof store
 
 
 export const useTypedSelector: TypedUseSelectorHook<rootReducerType> = useSelector;

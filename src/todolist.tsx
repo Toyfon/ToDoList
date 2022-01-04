@@ -8,20 +8,14 @@ import {FilterValuesType} from "./Redux/todo-reducer";
 import {Task} from "./components/Task/Task";
 import {useDispatch} from "react-redux";
 import {getTasks} from "./Redux/task-reducer";
-import {ResponseTaskType} from "./api/tasksApi";
+import {ResponseTaskType, TaskStatuses} from "./api/tasksApi";
 
-
-export type taskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
 
 type toDoListPropsType = {
     id: string
     filter: FilterValuesType
     title: string
-    tasks?: Array<taskType>
+    tasks: Array<ResponseTaskType>
     removeTask: (taskId: string, todolistId: string) => void
     changeFilter: (value: FilterValuesType, todolistId: string) => void
     addTask: (title: string, todolistId: string) => void
@@ -43,23 +37,23 @@ export const Todolist = React.memo(({
                                         changeTodolistTitle
                                     }: toDoListPropsType) => {
 
-
     const dispatch = useDispatch()
 
-    useEffect(()=>{
-            dispatch(getTasks(id))
-    },[])
+    useEffect(() => {
+        dispatch(getTasks(id))
+    }, [])
 
     const onRemoveHandler = useCallback((taskId: string) => removeTask(taskId, id), [removeTask, id])
     const changeButtonFilter = useCallback((filter: FilterValuesType) => changeFilter(filter, id), [changeFilter, id])
     const removeTodolistHandler = useCallback(() => {
-        removeTodolist(id)},[removeTodolist,id])
+        removeTodolist(id)
+    }, [removeTodolist, id])
     const callBackHandlerForAddTask = useCallback((newTaskTitle: string) => {
         addTask(newTaskTitle, id)
     }, [addTask, id])
     const changeTodolistTitleHandler = useCallback((title: string) => {
         changeTodolistTitle(title, id)
-    },[changeTodolistTitle,id])
+    }, [changeTodolistTitle, id])
 
     const changeTaskStatusCallback = useCallback((taskId: string, value: boolean) => {
         changeTaskStatus(taskId, value, id)
@@ -70,23 +64,16 @@ export const Todolist = React.memo(({
     }, [changeTaskTitle, id])
 
 
-
     let taskForTodolist = tasks;
 
-    console.log("TASKS",tasks)
     if (filter === "active") {
-        taskForTodolist = tasks?.filter(t => !t.isDone);
+        taskForTodolist = tasks.filter(t => t.status === TaskStatuses.New);
     }
     if (filter === "completed") {
-        taskForTodolist = tasks?.filter(t => t.isDone);
+        taskForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed);
     }
 
-    // if (!taskForTodolist) {
-    //     return null;
-    // }
-
-
-    const tasksElementens = taskForTodolist?.map(t => {
+    const tasksElements = taskForTodolist.map(t => {
         return <Task changeTaskStatusCallback={changeTaskStatusCallback}
                      task={t}
                      changeTaskTitleCallback={changeTaskTitleCallback}
@@ -105,7 +92,7 @@ export const Todolist = React.memo(({
             </Typography>
             <AddItemForm callBack={callBackHandlerForAddTask}/>
             <List>
-              {tasksElementens}
+                {tasksElements}
             </List>
             <div>
                 <Button variant={filter === 'all' ? "contained" : "text"} color={"secondary"}
