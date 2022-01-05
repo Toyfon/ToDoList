@@ -26,7 +26,7 @@ export const toDoAPI = {
 
 
 // берем типы из документации апи
-type TodoType = {
+export type TodoType = {
     id: string
     addedDate: string
     order: number
