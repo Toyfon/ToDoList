@@ -8,25 +8,25 @@ import {ResponseTaskType, TaskStatuses} from "../../api/tasksApi";
 
 type TaskPropsType = {
     task: ResponseTaskType
-    changeTaskTitleCallback: (taskId: string, title: string) => void
-    changeTaskStatusCallback: (taskId: string, status: TaskStatuses) => void
-    onRemoveHandler: (taskId: string) => void
+    changeTaskTitle: (taskId: string, title: string) => void
+    changeTaskStatus: (taskId: string, status: TaskStatuses) => void
+    removeTask: (taskId: string) => void
 }
 
 export const Task: FC<TaskPropsType> = React.memo(({
                                                        task,
-                                                       changeTaskTitleCallback,
-                                                       changeTaskStatusCallback,
-                                                       onRemoveHandler
+                                                       changeTaskTitle,
+                                                       changeTaskStatus,
+                                                       removeTask
                                                    }) => {
 
     const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
         let value = e.currentTarget.checked
-        changeTaskStatusCallback(task.id, value ? TaskStatuses.Completed : TaskStatuses.New)
+        changeTaskStatus(task.id, value ? TaskStatuses.Completed : TaskStatuses.New)
     }
     const changeTaskTitleHandler = useCallback((title: string) => {
-        changeTaskTitleCallback(task.id, title)
-    }, [changeTaskTitleCallback, task.id])
+        changeTaskTitle(task.id, title)
+    }, [changeTaskTitle, task.id])
 
     return <div>
         <ListItem
@@ -38,7 +38,7 @@ export const Task: FC<TaskPropsType> = React.memo(({
             <Checkbox checked={task.status === TaskStatuses.Completed} color={'secondary'}
                       onChange={changeTaskStatusHandler}/>
             <EditableSpan title={task.title} callBack={changeTaskTitleHandler}/>
-            <IconButton onClick={() => onRemoveHandler(task.id)} color={"secondary"}>
+            <IconButton onClick={() => removeTask(task.id)} color={"secondary"}>
                 <DeleteIcon/>
             </IconButton>
         </ListItem>

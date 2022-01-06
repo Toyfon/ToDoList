@@ -1,60 +1,41 @@
 import {Dispatch} from "redux";
-import {toDoAPI} from "../api/todoApi";
+import {toDoAPI, TodoType} from "../api/todoApi";
 
 export type FilterValuesType = "all" | "active" | "completed"
-export type TodolistType = {
-    id: string
-    title: string
+
+export type TodoDomainType = TodoType & {
     filter: FilterValuesType
 }
 
+let initialState: Array<TodoDomainType> = []
 
-let initialState = {
-    todos: [] as Array<TodolistType>
-}
-export type InitStateType = typeof initialState
 
-export const toDoReducer = (state = initialState, action: ActionType): InitStateType => {
+export const toDoReducer = (state = initialState, action: ActionType): Array<TodoDomainType> => {
     switch (action.type) {
         case "todos/REMOVE-TODOLIST":
-            return {
-                ...state,
-                todos: state.todos.filter(tl => tl.id !== action.payload.id)
-            }
+            return state.filter(tl => tl.id !== action.payload.id)
         case "todos/ADD-TODOLIST":
-            let newTodolist: TodolistType = {
-                ...action.payload,
-                filter: "all"
-            }
-            return {
-                ...state,
-                todos: [...state.todos, newTodolist]
-            }
+            const newTodolist:TodoDomainType = {...action.payload.todolist, filter:'all'}
+            return [newTodolist,...state]
         case "todos/CHANGE-TODOLIST_TITLE":
             return {
-                ...state,
-                todos: state.todos
-                    .map(s => s.id === action.payload.id
+                ...state.map(s => s.id === action.payload.id
                         ?
                         {...s, title: action.payload.title}
                         : s)
             }
         case "todos/CHANGE-TODOLIST_FILTER":
             return {
-                ...state,
-                todos: state.todos
-                    .map(s => s.id === action.payload.id
+                ...state.map(s => s.id === action.payload.id
                         ?
                         {...s, filter: action.payload.filter}
                         : s)
             }
         case "todos/SET-TODOS":
-            return {
-                ...state, todos: action.todos.map(tl => ({
+            return action.todos.map(tl => ({
                     ...tl,
                     filter: 'all'
                 }))
-            }
         default:
             return state
     }
@@ -62,22 +43,22 @@ export const toDoReducer = (state = initialState, action: ActionType): InitState
 
 //Action Types
 export type ActionType = removeTodoListACType |
-                         addTodoListACType |
-                         changeTodoListTitleACType |
-                         changeTodoListFilterACType |
-                         setTodoListsACType
+    addTodoListACType |
+    changeTodoListTitleACType |
+    changeTodoListFilterACType |
+    setTodoListsACType
 
 // Action Creators
 export type removeTodoListACType = ReturnType<typeof removeTodoListAC>
 export const removeTodoListAC = (id: string) => ({type: "todos/REMOVE-TODOLIST", payload: {id}} as const)
 
 export type setTodoListsACType = ReturnType<typeof setTodoListsAC>
-export const setTodoListsAC = (todos: Array<any>) => ({type: "todos/SET-TODOS", todos} as const)
+export const setTodoListsAC = (todos: Array<TodoType>) => ({type: "todos/SET-TODOS", todos} as const)
 
 export type addTodoListACType = ReturnType<typeof addTodoListAC>
-export const addTodoListAC = (title: string, id: string) => ({
+export const addTodoListAC = (todolist: TodoType) => ({
     type: "todos/ADD-TODOLIST",
-    payload: {title, id}
+    payload: {todolist}
 } as const)
 
 export type changeTodoListTitleACType = ReturnType<typeof changeTodoListTitleAC>
@@ -98,14 +79,45 @@ export const changeTodoListFilterAC = (id: string, filter: FilterValuesType) => 
 } as const)
 
 
-
 //Thunk Creators
 export const getTodoLists = () => async (dispatch: Dispatch) => {
     try {
-        let response = await toDoAPI.getTodos()
-        dispatch(setTodoListsAC(response.data))
+        let {data} = await toDoAPI.getTodos()
+        dispatch(setTodoListsAC(data))
     } catch (e: any) {
         throw new Error('ERROR')
+    }
+}
+
+export const deleteFetchedTodolist = (todolistId: string) => async (dispatch: Dispatch) => {
+    try {
+        let {data} = await toDoAPI.deleteTodo(todolistId)
+        if (data.resultCode === 0) {
+            dispatch(removeTodoListAC(todolistId))
+        }
+    } catch (e: any) {
+        console.warn('ERROR')
+    }
+}
+
+export const updateFetchedTodoTitle = (todolistId: string, title: string) => async (dispatch: Dispatch) => {
+    try {
+        let {data} = await toDoAPI.updateTodoTitle(todolistId, title)
+        if (data.resultCode === 0) {
+            dispatch(changeTodoListTitleAC(todolistId, title))
+        }
+    } catch (e: any) {
+        console.warn('ERROR')
+    }
+}
+
+export const createTodolist = (title: string) => async (dispatch: Dispatch) => {
+    try {
+        let {data} = await toDoAPI.createTodo(title)
+        dispatch(addTodoListAC(data.item))
+
+    } catch (e: any) {
+        console.warn('ERROR')
     }
 }
 

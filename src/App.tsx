@@ -1,23 +1,19 @@
 import React, {useCallback} from 'react';
-import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Toolbar, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import './App.css'
-import {addTodoListAC} from "./Redux/todo-reducer";
-import {addArrayTaskAC} from "./Redux/task-reducer";
+import {createTodolist} from "./Redux/todo-reducer";
 import {useDispatch} from "react-redux";
 import {TodoLists} from "./components/Todolists/Todolists";
 
 
-function App() {
+export const App = () => {
 
     const dispatch = useDispatch()
 
     const addTodolist = useCallback((title: string) => {
-        const todoListId = v1()
-        dispatch(addTodoListAC(title, todoListId))
-        dispatch(addArrayTaskAC(todoListId))
+        dispatch(createTodolist(title))
     }, [dispatch])
 
 
@@ -51,5 +47,3 @@ function App() {
         </div>
     );
 }
-
-export default App

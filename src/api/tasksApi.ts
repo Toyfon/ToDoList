@@ -68,5 +68,8 @@ export const tasksAPI = {
     updateTaskStatus(todolistId: string, taskId: string, model: UpdateTaskModelType) {
         return instance.put<CommonResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     },
+    updateTaskTitle(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+        return instance.put<CommonResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
+    },
 }
 

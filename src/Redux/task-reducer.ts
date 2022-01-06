@@ -1,6 +1,6 @@
 import {ResponseTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../api/tasksApi";
 import {Dispatch} from "redux";
-import {setTodoListsACType} from "./todo-reducer";
+import {addTodoListACType, setTodoListsACType} from "./todo-reducer";
 import {rootReducerType} from "./Redux-store";
 
 
@@ -9,7 +9,6 @@ export type TaskStateType = {
 }
 
 export let initialState: TaskStateType = {}
-
 
 export const taskReducer = (state = initialState, action: ActionType): TaskStateType => {
     switch (action.type) {
@@ -45,18 +44,16 @@ export const taskReducer = (state = initialState, action: ActionType): TaskState
                         : t)
             }
         }
-        case "tasks/ADD-ARRAY-TASK": {
-            return {
-                ...state,
-                [action.payload.todoListId]: []
-            }
-        }
         case "tasks/SET_TASKS": {
             return {
                 ...state,
                 [action.payload.todoListId]: action.payload.tasks
             }
         }
+        case "todos/ADD-TODOLIST":
+            return {
+                ...state, [action.payload.todolist.id]:[]
+            }
         case 'todos/SET-TODOS': {
             const stateCopy = {...state}
             action.todos.forEach((tl) => {
@@ -76,7 +73,7 @@ export type ActionType = removeTaskACType |
     changeTaskTitleACType |
     addArrayTaskACType |
     setTaskACType |
-    setTodoListsACType
+    setTodoListsACType | addTodoListACType
 
 
 // Action Creators
@@ -107,7 +104,7 @@ export const changeTaskStatusAC = (status: TaskStatuses, taskId: string, todolis
 } as const)
 
 export type changeTaskTitleACType = ReturnType<typeof changeTaskTitleAC>
-export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string) => ({
+export const changeTaskTitleAC = (title:string, taskId:string, todolistId:string) => ({
     type: 'tasks/CHANGE-TASK-TITLE',
     payload: {
         title,
@@ -136,7 +133,6 @@ export const getTasks = (todoListId: string) => async (dispatch: Dispatch) => {
         console.warn(e)
     }
 }
-
 export const deleteTask = (taskId: string, todolistId: string) => async (dispatch: Dispatch) => {
     try {
         let {data} = await tasksAPI.deleteTask(todolistId, taskId)
@@ -147,7 +143,6 @@ export const deleteTask = (taskId: string, todolistId: string) => async (dispatc
         throw new Error('что то не так')
     }
 }
-
 export const createFetchedTask = (title: string, todolistId: string) => async (dispatch: Dispatch) => {
     try {
         let {data} = await tasksAPI.createTask(todolistId, title)
@@ -158,8 +153,6 @@ export const createFetchedTask = (title: string, todolistId: string) => async (d
 
     }
 }
-
-
 export const updateFetchedTaskStatus = (todolistId: string, taskId: string, status: TaskStatuses) => {
     return async (dispatch: Dispatch, getState: () => rootReducerType) => {
         const state = getState()
@@ -180,6 +173,32 @@ export const updateFetchedTaskStatus = (todolistId: string, taskId: string, stat
         try {
             await tasksAPI.updateTaskStatus(todolistId, taskId, model)
             dispatch(changeTaskStatusAC(status, taskId, todolistId))
+
+        } catch (e: any) {
+
+        }
+    }
+}
+export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title: string) => {
+    return async (dispatch: Dispatch, getState: () => rootReducerType) => {
+        const state = getState()
+        const task = state.tasks[todolistId].find(t => t.id === taskId)
+        if(!task) {
+            console.warn("task not found in the state")
+            return
+        }
+
+        const model: UpdateTaskModelType = {
+            status: task.status,
+            title: title,
+            deadline: task.deadline,
+            description: task.description,
+            priority: task.priority,
+            startDate: task.startDate,
+        }
+        try {
+            await tasksAPI.updateTaskTitle(todolistId, taskId, model)
+            dispatch(changeTaskTitleAC(title, taskId, todolistId))
 
         } catch (e: any) {
 

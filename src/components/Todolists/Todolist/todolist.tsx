@@ -4,10 +4,21 @@ import {EditableSpan} from "../../EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, List, Typography} from "@mui/material";
-import {FilterValuesType} from "../../../Redux/todo-reducer";
+import {
+    changeTodoListFilterAC,
+    deleteFetchedTodolist,
+    FilterValuesType,
+    updateFetchedTodoTitle
+} from "../../../Redux/todo-reducer";
 import {Task} from "../../Task/Task";
 import {useDispatch} from "react-redux";
-import {createFetchedTask, deleteTask, getTasks} from "../../../Redux/task-reducer";
+import {
+    createFetchedTask,
+    deleteTask,
+    getTasks,
+    updateFetchedTaskStatus,
+    updateFetchedTaskTitle
+} from "../../../Redux/task-reducer";
 import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
 
 
@@ -16,22 +27,9 @@ type toDoListPropsType = {
     filter: FilterValuesType
     title: string
     tasks: Array<ResponseTaskType>
-    changeFilter: (value: FilterValuesType, todolistId: string) => void
-    changeTaskStatus: (taskId: string, status: TaskStatuses, todolistId: string) => void
-    removeTodolist: (todolistId: string) => void
-    changeTaskTitle: (taskId: string, title: string, todolistId: string) => void
-    changeTodolistTitle: (title: string, todolistId: string) => void
 }
 
-export const Todolist = React.memo(({
-                                        id, filter,
-                                        title, tasks,
-                                        changeFilter,
-                                        changeTaskStatus,
-                                        removeTodolist,
-                                        changeTaskTitle,
-                                        changeTodolistTitle
-                                    }: toDoListPropsType) => {
+export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsType) => {
 
     const dispatch = useDispatch()
 
@@ -39,28 +37,33 @@ export const Todolist = React.memo(({
         dispatch(getTasks(id))
     }, [])
 
-    const onRemoveHandler = useCallback((taskId: string) => {
+    const removeTask = useCallback((taskId: string) => {
         dispatch(deleteTask(taskId, id))
     }, [dispatch, id])
+
     const addTask = useCallback((newTaskTitle: string) => {
         dispatch(createFetchedTask(newTaskTitle, id))
     }, [dispatch, id])
-    const changeButtonFilter = useCallback((filter: FilterValuesType) => changeFilter(filter, id), [changeFilter, id])
-    const removeTodolistHandler = useCallback(() => {
-        removeTodolist(id)
-    }, [removeTodolist, id])
 
-    const changeTodolistTitleHandler = useCallback((title: string) => {
-        changeTodolistTitle(title, id)
-    }, [changeTodolistTitle, id])
+    const changeTaskStatus = useCallback((taskId: string, status: TaskStatuses) => {
+        dispatch(updateFetchedTaskStatus(id,taskId, status))
+    }, [dispatch,id])
 
-    const changeTaskStatusCallback = useCallback((taskId: string, value: TaskStatuses) => {
-        changeTaskStatus(taskId, value, id)
-    }, [changeTaskStatus, id])
+    const changeTodolistTitle = useCallback((title: string) => {
+        dispatch(updateFetchedTodoTitle(id, title))
+    }, [dispatch, id])
 
-    const changeTaskTitleCallback = useCallback((taskId: string, title: string) => {
-        changeTaskTitle(taskId, title, id)
-    }, [changeTaskTitle, id])
+    const removeTodolist = useCallback(() => {
+        dispatch(deleteFetchedTodolist(id))
+    }, [dispatch, id])
+
+    const changeButtonFilter = useCallback((filter: FilterValuesType) => {
+        dispatch(changeTodoListFilterAC(id, filter))
+       }, [dispatch, id])
+
+    const changeTaskTitle = useCallback((taskId: string, title: string) => {
+        dispatch(updateFetchedTaskTitle(id, taskId, title))
+    }, [dispatch, id])
 
 
     let taskForTodolist = tasks;
@@ -73,19 +76,18 @@ export const Todolist = React.memo(({
     }
 
     const tasksElements = taskForTodolist.map(t => {
-        return <Task changeTaskStatusCallback={changeTaskStatusCallback}
+        return <Task changeTaskStatus={changeTaskStatus}
                      task={t}
-                     changeTaskTitleCallback={changeTaskTitleCallback}
-                     onRemoveHandler={onRemoveHandler}
+                     changeTaskTitle={changeTaskTitle}
+                     removeTask={removeTask}
                      key={t.id}/>
     })
-
 
     return (
         <div>
             <Typography variant="h6" align={'center'}>
-                <EditableSpan title={title} callBack={changeTodolistTitleHandler}/>
-                <IconButton color={"secondary"} onClick={removeTodolistHandler}>
+                <EditableSpan title={title} callBack={changeTodolistTitle}/>
+                <IconButton color={"secondary"} onClick={removeTodolist}>
                     <DeleteIcon/>
                 </IconButton>
             </Typography>
