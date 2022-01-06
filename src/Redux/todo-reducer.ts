@@ -1,5 +1,6 @@
 import {Dispatch} from "redux";
 import {toDoAPI, TodoType} from "../api/todoApi";
+import {ThunkDispatch} from "redux-thunk";
 
 export type FilterValuesType = "all" | "active" | "completed"
 
@@ -17,20 +18,20 @@ export const toDoReducer = (state = initialState, action: ActionType): Array<Tod
         case "todos/ADD-TODOLIST":
             const newTodolist:TodoDomainType = {...action.payload.todolist, filter:'all'}
             return [newTodolist,...state]
-        case "todos/CHANGE-TODOLIST_TITLE":
-            return {
-                ...state.map(s => s.id === action.payload.id
-                        ?
-                        {...s, title: action.payload.title}
-                        : s)
+        case "todos/CHANGE-TODOLIST_TITLE": {
+            let todolist = state.find(tl => tl.id === action.payload.id)
+            if (todolist) {
+                todolist.title = action.payload.title
             }
-        case "todos/CHANGE-TODOLIST_FILTER":
-            return {
-                ...state.map(s => s.id === action.payload.id
-                        ?
-                        {...s, filter: action.payload.filter}
-                        : s)
+            return [...state]
+        }
+        case "todos/CHANGE-TODOLIST_FILTER": {
+            let todolist = state.find(tl => tl.id === action.payload.id)
+            if (todolist) {
+                todolist.filter = action.payload.filter
             }
+            return [...state]
+        }
         case "todos/SET-TODOS":
             return action.todos.map(tl => ({
                     ...tl,
@@ -80,7 +81,11 @@ export const changeTodoListFilterAC = (id: string, filter: FilterValuesType) => 
 
 
 //Thunk Creators
-export const getTodoLists = () => async (dispatch: Dispatch) => {
+//ThunkDispatch<any, any, any>
+//1. тип всего стейта
+//2. екстра аргументы unknown
+//3. тип экшенов которые диспатчим
+export const getTodoLists = () => async (dispatch: ThunkDispatch<any, unknown, any>) => {
     try {
         let {data} = await toDoAPI.getTodos()
         dispatch(setTodoListsAC(data))

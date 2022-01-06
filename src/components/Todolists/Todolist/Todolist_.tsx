@@ -29,7 +29,7 @@ type toDoListPropsType = {
     tasks: Array<ResponseTaskType>
 }
 
-export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsType) => {
+export const Todolist_ = React.memo(({id, filter, title, tasks}: toDoListPropsType) => {
 
     const dispatch = useDispatch()
 
@@ -59,7 +59,7 @@ export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsTyp
 
     const changeButtonFilter = useCallback((filter: FilterValuesType) => {
         dispatch(changeTodoListFilterAC(id, filter))
-       }, [dispatch, id])
+    }, [dispatch, id])
 
     const changeTaskTitle = useCallback((taskId: string, title: string) => {
         dispatch(updateFetchedTaskTitle(id, taskId, title))
@@ -106,3 +106,4 @@ export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsTyp
         </div>
     )
 })
+
