@@ -7,15 +7,10 @@ type AddItemFormPropsType = {
     callBack: (value: string) => void
 }
 
-export const AddItemForm = React.memo( ({
-                                callBack,
-                                ...props
-                            }: AddItemFormPropsType) => {
+export const AddItemForm = React.memo(({callBack,}: AddItemFormPropsType) => {
 
     const [newTaskTitle, setNewTaskTitle] = useState("")
     const [error, setError] = useState<string | null>(null)
-
-
 
     const addItem = () => {
         if (newTaskTitle.trim()) {
@@ -32,8 +27,8 @@ export const AddItemForm = React.memo( ({
         setError(null)
     }
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if(error !== null)
-        setError(null)
+        if (error !== null)
+            setError(null)
         if (e.key === "Enter" && newTaskTitle.trim()) {
             callBack(newTaskTitle)
             setNewTaskTitle("")

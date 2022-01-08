@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
-import {AddItemForm} from "./AddItemForm";
+import './App.css'
+import {createTodolist} from "../features/Todolists/todo-reducer";
+import {useDispatch} from "react-redux";
+import {TodoLists} from "../features/Todolists/Todolists";
+import {AddItemForm} from "../components/AddItemForm/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Toolbar, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import './App.css'
-import {createTodolist} from "./Redux/todo-reducer";
-import {useDispatch} from "react-redux";
-import {TodoLists} from "./components/Todolists/Todolists";
 
 
 export const App = () => {
@@ -16,18 +16,11 @@ export const App = () => {
         dispatch(createTodolist(title))
     }, [dispatch])
 
-
     return (
         <div>
             <AppBar position="static" color={"secondary"}>
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{mr: 2}}
-                    >
+                    <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{mr: 2}}>
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
@@ -45,5 +38,5 @@ export const App = () => {
                 </Grid>
             </Container>
         </div>
-    );
+    )
 }

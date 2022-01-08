@@ -1,9 +1,9 @@
 import React, {ChangeEvent, FC, useCallback} from "react";
 import {Checkbox, ListItem} from "@mui/material";
-import {EditableSpan} from "../EditableSpan/EditableSpan";
+import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {ResponseTaskType, TaskStatuses} from "../../api/tasksApi";
+import {ResponseTaskType, TaskStatuses} from "../../../../api/tasksApi";
 
 
 type TaskPropsType = {
@@ -43,5 +43,4 @@ export const Task: FC<TaskPropsType> = React.memo(({
             </IconButton>
         </ListItem>
     </div>
-
 })

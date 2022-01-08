@@ -1,9 +1,8 @@
 import {Grid, Paper} from "@mui/material";
-
 import React, {useEffect} from "react";
-import {useTypedSelector} from "../../Redux/Redux-store";
-import {getTodoLists, TodoDomainType} from "../../Redux/todo-reducer";
-import {TaskStateType} from "../../Redux/task-reducer";
+import {useTypedSelector} from "../../app/Redux-store";
+import {getTodoLists, TodoDomainType} from "./todo-reducer";
+import {TaskStateType} from "./task-reducer";
 import {useDispatch} from "react-redux";
 import {Todolist_} from "./Todolist/Todolist_";
 
@@ -11,10 +10,9 @@ import {Todolist_} from "./Todolist/Todolist_";
 
 export const TodoLists = () => {
 
-
     const todoLists = useTypedSelector<TodoDomainType[]>(state => state.todoLists)
     const tasks = useTypedSelector<TaskStateType>(state => state.tasks)
-    console.log("TODOS:" ,todoLists)
+
     const dispatch = useDispatch()
 
     useEffect(() => {

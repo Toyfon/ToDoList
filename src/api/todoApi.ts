@@ -8,6 +8,7 @@ const instance = axios.create({
     }
 })
 
+//api
 export const toDoAPI = {
     getTodos() {
         return instance.get<Array<TodoType>>('/todo-lists')
@@ -24,19 +25,17 @@ export const toDoAPI = {
     }
 }
 
-
-// берем типы из документации апи
+//types
 export type TodoType = {
     id: string
     addedDate: string
     order: number
     title: string
 }
-
-// дженерик типизация (если не значение типа data, то по умолчанию берем пустой объект)
 type CommonResponseType<T = {}> = {
     resultCode: number
     messages: string []
     fieldsErrors: string []
     data: T
 }
+

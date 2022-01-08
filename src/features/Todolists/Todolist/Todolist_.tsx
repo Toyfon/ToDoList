@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from "react";
-import {AddItemForm} from "../../../AddItemForm";
-import {EditableSpan} from "../../EditableSpan/EditableSpan";
+import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
+import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, List, Typography} from "@mui/material";
@@ -9,8 +9,8 @@ import {
     deleteFetchedTodolist,
     FilterValuesType,
     updateFetchedTodoTitle
-} from "../../../Redux/todo-reducer";
-import {Task} from "../../Task/Task";
+} from "../todo-reducer";
+import {Task} from "./Task/Task";
 import {useDispatch} from "react-redux";
 import {
     createFetchedTask,
@@ -18,7 +18,7 @@ import {
     getTasks,
     updateFetchedTaskStatus,
     updateFetchedTaskTitle
-} from "../../../Redux/task-reducer";
+} from "../task-reducer";
 import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
 
 
