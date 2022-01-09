@@ -22,7 +22,8 @@ export const TodoLists = () => {
 
     const todolistComponents = todoLists.map(tl => {
         let tasksForRender = tasks[tl.id]
-        return (<Grid item key={tl.id}>
+        return (
+            <Grid item key={tl.id}>
                 <Paper elevation={2} sx={{padding: "10px"}}>
                     <Todolist_
                         key={tl.id}

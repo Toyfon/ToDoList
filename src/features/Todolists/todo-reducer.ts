@@ -1,6 +1,7 @@
 import {toDoAPI, TodoType} from "../../api/todoApi";
 import {ThunkDispatch} from "redux-thunk";
 import {RootReducerType} from "../../app/Redux-store";
+import {setStatus, SetStatusActionType} from "../../app/app-reducer";
 
 
 let initialState: Array<TodoDomainType> = []
@@ -48,10 +49,12 @@ export const changeTodoListFilterAC = (id: string, filter: FilterValuesType) => 
 //1. rootState type
 //2. extra arguments (unknown)
 //3. Action Types
-export const getTodoLists = () => async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType>) => {
+export const getTodoLists = () => async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>) => {
     try {
+        dispatch(setStatus('loading'))
         let {data} = await toDoAPI.getTodos()
         dispatch(setTodoListsAC(data))
+        dispatch(setStatus('succeeded'))
     } catch (e: any) {
         throw new Error('ERROR')
     }
@@ -81,11 +84,12 @@ export const updateFetchedTodoTitle = (todolistId: string, title: string) => {
     }
 }
 export const createTodolist = (title: string) => {
-    return async (dispatch:  ThunkDispatch<RootReducerType, unknown, ActionsType>) => {
+    return async (dispatch:  ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>) => {
         try {
+            dispatch(setStatus('loading'))
             let {data} = await toDoAPI.createTodo(title)
             dispatch(addTodoListAC(data.item))
-
+            dispatch(setStatus('succeeded'))
         } catch (e: any) {
             console.warn('ERROR')
         }
