@@ -18,8 +18,6 @@ export let store = createStore(rootReducer, applyMiddleware(thunk))
 
 
 
-
-
 //export const useThunkDispatch = () => useDispatch<typeof store.dispatch>()
 
 export const useTypedSelector: TypedUseSelectorHook<RootReducerType> = useSelector;

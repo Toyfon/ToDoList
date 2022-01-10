@@ -28,7 +28,7 @@ export const tasksAPI = {
 }
 
 //types
-type CommonResponseType<T = {}> = {
+export type CommonResponseType<T = {}> = {
     resultCode: number
     messages: string []
     fieldsErrors: string []
