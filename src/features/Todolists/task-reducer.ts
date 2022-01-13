@@ -52,12 +52,12 @@ export const taskReducer = (state = initialState, action: ActionsType): TaskStat
 
 
 // Action Creators
-export const RemoveTaskAC = (taskId: string, todolistId: string) => ({
+export const removeTaskAC = (taskId: string, todolistId: string) => ({
     type: 'TASKS/REMOVE-TASK',
     payload: {taskId, todolistId}
 } as const)
-export const AddTaskAC = (task: ResponseTaskType) => ({type: 'TASKS/ADD-TASK', payload: {task}} as const)
-export const ChangeTaskStatusAC = (status: TaskStatuses, taskId: string, todolistId: string) =>
+export const addTaskAC = (task: ResponseTaskType) => ({type: 'TASKS/ADD-TASK', payload: {task}} as const)
+export const changeTaskStatusAC = (status: TaskStatuses, taskId: string, todolistId: string) =>
     ({
         type: 'TASKS/CHANGE-TASK-STATUS',
         payload: {
@@ -66,7 +66,7 @@ export const ChangeTaskStatusAC = (status: TaskStatuses, taskId: string, todolis
             todolistId
         }
     } as const)
-export const ChangeTaskTitleAC = (title: string, taskId: string, todolistId: string) =>
+export const changeTaskTitleAC = (title: string, taskId: string, todolistId: string) =>
     ({
         type: 'TASKS/CHANGE-TASK-TITLE',
         payload: {
@@ -75,7 +75,7 @@ export const ChangeTaskTitleAC = (title: string, taskId: string, todolistId: str
             todolistId
         }
     } as const)
-export const SetTaskAC = (tasks: Array<ResponseTaskType>, todoListId: string) =>
+export const setTaskAC = (tasks: Array<ResponseTaskType>, todoListId: string) =>
     ({type: 'TASKS/SET_TASKS', payload: {tasks, todoListId}} as const)
 
 
@@ -85,7 +85,7 @@ export const getTasks = (todoListId: string) => {
         try {
             dispatch(setStatus('loading'))
             let data = await tasksAPI.getTasks(todoListId)
-            dispatch(SetTaskAC(data.items, todoListId))
+            dispatch(setTaskAC(data.items, todoListId))
             dispatch(setStatus('succeeded'))
 
         } catch (e: any) {
@@ -98,7 +98,7 @@ export const deleteTask = (taskId: string, todolistId: string) => {
         try {
             let {data} = await tasksAPI.deleteTask(todolistId, taskId)
             if (data.resultCode === 0) {
-                dispatch(RemoveTaskAC(taskId, todolistId))
+                dispatch(removeTaskAC(taskId, todolistId))
             }
         } catch (e: any) {
             throw new Error('что то не так')
@@ -111,7 +111,7 @@ export const createFetchedTask = (title: string, todolistId: string) => {
             dispatch(setStatus('loading'))
             let {data} = await tasksAPI.createTask(todolistId, title)
             if (data.resultCode === 0) {
-                dispatch(AddTaskAC(data.data.item))
+                dispatch(addTaskAC(data.data.item))
                 dispatch(setStatus('succeeded'))
             } else {
                 handleServerAppError(data,dispatch)
@@ -131,7 +131,7 @@ export const updateFetchedTaskStatus = (todolistId: string, taskId: string, stat
             return
         }
         const model: UpdateTaskModelType = {
-            status: status,
+            status,
             title: task.title,
             deadline: task.deadline,
             description: task.description,
@@ -140,7 +140,7 @@ export const updateFetchedTaskStatus = (todolistId: string, taskId: string, stat
         }
         try {
             await tasksAPI.updateTaskStatus(todolistId, taskId, model)
-            dispatch(ChangeTaskStatusAC(status, taskId, todolistId))
+            dispatch(changeTaskStatusAC(status, taskId, todolistId))
         } catch (e: any) {
             console.warn('Error')
         }
@@ -165,7 +165,7 @@ export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title
         try {
             let {data} = await tasksAPI.updateTaskTitle(todolistId, taskId, model)
             if (data.resultCode === 0) {
-                dispatch(ChangeTaskTitleAC(title, taskId, todolistId))
+                dispatch(changeTaskTitleAC(title, taskId, todolistId))
             } else {
                 handleServerAppError(data,dispatch)
             }
@@ -177,11 +177,11 @@ export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title
 
 // types
 export type ActionsType =
-    | ReturnType<typeof RemoveTaskAC>
-    | ReturnType<typeof AddTaskAC>
-    | ReturnType<typeof ChangeTaskStatusAC>
-    | ReturnType<typeof ChangeTaskTitleAC>
-    | ReturnType<typeof SetTaskAC>
+    | ReturnType<typeof removeTaskAC>
+    | ReturnType<typeof addTaskAC>
+    | ReturnType<typeof changeTaskStatusAC>
+    | ReturnType<typeof changeTaskTitleAC>
+    | ReturnType<typeof setTaskAC>
     | SetTodoListsACType
     | AddTodoListACType
     | RemoveTodoListACType

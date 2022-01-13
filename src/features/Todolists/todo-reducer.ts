@@ -2,6 +2,7 @@ import {toDoAPI, TodoType} from "../../api/todoApi";
 import {ThunkDispatch} from "redux-thunk";
 import {RootReducerType} from "../../app/Redux-store";
 import {setStatus, SetStatusActionType} from "../../app/app-reducer";
+import {handleServerNetworkError} from "../../helpers/error-helpers";
 
 
 let initialState: Array<TodoDomainType> = []
@@ -57,7 +58,7 @@ export const getTodoLists = () => {
             dispatch(setTodoListsAC(data))
             dispatch(setStatus('succeeded'))
         } catch (e: any) {
-            throw new Error('ERROR')
+            handleServerNetworkError(e,dispatch)
         }
     }
 }

@@ -29,7 +29,7 @@ type toDoListPropsType = {
     tasks: Array<ResponseTaskType>
 }
 
-export const Todolist_ = React.memo(({id, filter, title, tasks}: toDoListPropsType) => {
+export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsType) => {
 
     const dispatch = useDispatch()
 

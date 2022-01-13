@@ -4,7 +4,7 @@ import {useTypedSelector} from "../../app/Redux-store";
 import {getTodoLists, TodoDomainType} from "./todo-reducer";
 import {TaskStateType} from "./task-reducer";
 import {useDispatch} from "react-redux";
-import {Todolist_} from "./Todolist/Todolist_";
+import {Todolist} from "./Todolist/Todolist";
 
 
 
@@ -25,7 +25,7 @@ export const TodoLists = () => {
         return (
             <Grid item key={tl.id}>
                 <Paper elevation={2} sx={{padding: "10px"}}>
-                    <Todolist_
+                    <Todolist
                         key={tl.id}
                         id={tl.id}
                         title={tl.title}
