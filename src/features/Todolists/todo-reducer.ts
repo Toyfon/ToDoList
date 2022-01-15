@@ -1,13 +1,12 @@
 import {toDoAPI, TodoType} from "../../api/todoApi";
-import {ThunkDispatch} from "redux-thunk";
-import {RootReducerType} from "../../app/Redux-store";
-import {setStatus, SetStatusActionType} from "../../app/app-reducer";
+import {RootThunkType} from "../../app/Redux-store";
+import {setStatus} from "../../app/app-reducer";
 import {handleServerNetworkError} from "../../helpers/error-helpers";
 
 
 let initialState: Array<TodoDomainType> = []
 
-export const toDoReducer = (state = initialState, action: ActionsType): Array<TodoDomainType> => {
+export const toDoReducer = (state = initialState, action: TodoActionsType): Array<TodoDomainType> => {
     switch (action.type) {
         case "TODOS/REMOVE-TODOLIST":
             return state.filter(tl => tl.id !== action.payload.id)
@@ -46,12 +45,7 @@ export const changeTodoListFilterAC = (id: string, filter: FilterValuesType) => 
 
 
 //Thunk Creators
-//ThunkDispatch<any, any, any>
-//1. rootState type
-//2. extra arguments (unknown)
-//3. Action Types
-export const getTodoLists = () => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>) => {
+export const getTodoLists = ():RootThunkType => async dispatch => {
         try {
             dispatch(setStatus('loading'))
             let {data} = await toDoAPI.getTodos()
@@ -60,10 +54,8 @@ export const getTodoLists = () => {
         } catch (e: any) {
             handleServerNetworkError(e,dispatch)
         }
-    }
 }
-export const deleteFetchedTodolist = (todolistId: string) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType>) => {
+export const deleteFetchedTodolist = (todolistId: string):RootThunkType => async dispatch => {
         try {
             let {data} = await toDoAPI.deleteTodo(todolistId)
             if (data.resultCode === 0) {
@@ -72,10 +64,8 @@ export const deleteFetchedTodolist = (todolistId: string) => {
         } catch (e: any) {
             console.warn('ERROR')
         }
-    }
 }
-export const updateFetchedTodoTitle = (todolistId: string, title: string) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType>) => {
+export const updateFetchedTodoTitle = (todolistId: string, title: string):RootThunkType => async dispatch => {
         try {
             let {data} = await toDoAPI.updateTodoTitle(todolistId, title)
             if (data.resultCode === 0) {
@@ -84,10 +74,8 @@ export const updateFetchedTodoTitle = (todolistId: string, title: string) => {
         } catch (e: any) {
             console.warn('ERROR')
         }
-    }
 }
-export const createTodolist = (title: string) => {
-    return async (dispatch:  ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>) => {
+export const createTodolist = (title: string):RootThunkType => async dispatch => {
         try {
             dispatch(setStatus('loading'))
             let {data} = await toDoAPI.createTodo(title)
@@ -96,16 +84,14 @@ export const createTodolist = (title: string) => {
         } catch (e: any) {
             console.warn('ERROR')
         }
-    }
 }
 
 // types
-export type FilterValuesType = "all" | "active" | "completed"
 export type SetTodoListsACType = ReturnType<typeof setTodoListsAC>
 export type AddTodoListACType = ReturnType<typeof addTodoListAC>
 export type RemoveTodoListACType = ReturnType<typeof removeTodoListAC>
 
-export type ActionsType =
+export type TodoActionsType =
     | RemoveTodoListACType
     | AddTodoListACType
     | ReturnType<typeof changeTodoListTitleAC>
@@ -115,3 +101,4 @@ export type ActionsType =
 export type TodoDomainType = TodoType & {
     filter: FilterValuesType
 }
+export type FilterValuesType = "all" | "active" | "completed"

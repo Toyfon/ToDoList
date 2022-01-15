@@ -43,7 +43,7 @@ export type ResponseTaskType = {
     description: string
     title: string
     status: TaskStatuses
-    priority: number
+    priority: TaskPriorities
     startDate: string
     deadline: string
     id: string
@@ -57,11 +57,18 @@ export enum TaskStatuses {
     Completed = 2,
     Draft = 3
 }
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
+}
 export type  UpdateTaskModelType = {
     title: string
     description: string
     status: TaskStatuses
-    priority: number
+    priority: TaskPriorities
     startDate: string
     deadline: string
 }

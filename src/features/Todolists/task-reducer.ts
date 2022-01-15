@@ -1,14 +1,13 @@
 import {ResponseTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../../api/tasksApi";
 import {AddTodoListACType, RemoveTodoListACType, SetTodoListsACType} from "./todo-reducer";
-import {RootReducerType} from "../../app/Redux-store";
-import {ThunkDispatch} from "redux-thunk";
-import {SetErrorActionType, setStatus, SetStatusActionType} from "../../app/app-reducer";
+import {RootReducerType, RootThunkType} from "../../app/Redux-store";
+import {SetErrorActionType, setStatus} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../helpers/error-helpers";
 
 
 export let initialState: TaskStateType = {}
 
-export const taskReducer = (state = initialState, action: ActionsType): TaskStateType => {
+export const taskReducer = (state = initialState, action: TaskActionsType): TaskStateType => {
     switch (action.type) {
         case 'TASKS/REMOVE-TASK':
             return {
@@ -80,8 +79,7 @@ export const setTaskAC = (tasks: Array<ResponseTaskType>, todoListId: string) =>
 
 
 //Thunk Creators
-export const getTasks = (todoListId: string) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>) => {
+export const getTasks = (todoListId: string):RootThunkType => async dispatch => {
         try {
             dispatch(setStatus('loading'))
             let data = await tasksAPI.getTasks(todoListId)
@@ -91,10 +89,8 @@ export const getTasks = (todoListId: string) => {
         } catch (e: any) {
             console.warn(e)
         }
-    }
 }
-export const deleteTask = (taskId: string, todolistId: string) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType>) => {
+export const deleteTask = (taskId: string, todolistId: string):RootThunkType => async dispatch => {
         try {
             let {data} = await tasksAPI.deleteTask(todolistId, taskId)
             if (data.resultCode === 0) {
@@ -103,10 +99,8 @@ export const deleteTask = (taskId: string, todolistId: string) => {
         } catch (e: any) {
             throw new Error('что то не так')
         }
-    }
 }
-export const createFetchedTask = (title: string, todolistId: string) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>) => {
+export const createFetchedTask = (title: string, todolistId: string):RootThunkType => async dispatch => {
         try {
             dispatch(setStatus('loading'))
             let {data} = await tasksAPI.createTask(todolistId, title)
@@ -119,11 +113,9 @@ export const createFetchedTask = (title: string, todolistId: string) => {
         } catch (e: any) {
             handleServerNetworkError(e,dispatch)
         }
-    }
 }
-export const updateFetchedTaskStatus = (todolistId: string, taskId: string, status: TaskStatuses) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>,
-                  getState: () => RootReducerType) => {
+export const updateFetchedTaskStatus = (todolistId: string, taskId: string, status: TaskStatuses):RootThunkType =>
+    async (dispatch,getState: () => RootReducerType) => {
         const state = getState()
         const task = state.tasks[todolistId].find(t => t.id === taskId)
         if (!task) {
@@ -144,10 +136,9 @@ export const updateFetchedTaskStatus = (todolistId: string, taskId: string, stat
         } catch (e: any) {
             console.warn('Error')
         }
-    }
 }
-export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title: string) => {
-    return async (dispatch: ThunkDispatch<RootReducerType, unknown, ActionsType | SetStatusActionType>, getState: () => RootReducerType) => {
+export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title: string):RootThunkType =>
+    async (dispatch, getState: () => RootReducerType) => {
         const state = getState()
         const task = state.tasks[todolistId].find(t => t.id === taskId)
         if (!task) {
@@ -172,11 +163,10 @@ export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title
         } catch (e: any) {
             handleServerNetworkError(e,dispatch)
         }
-    }
 }
 
 // types
-export type ActionsType =
+export type TaskActionsType =
     | ReturnType<typeof removeTaskAC>
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof changeTaskStatusAC>
