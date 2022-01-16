@@ -1,7 +1,7 @@
 import {toDoAPI, TodoType} from "../../api/todoApi";
 import {RootThunkType} from "../../app/Redux-store";
 import {setStatus} from "../../app/app-reducer";
-import {handleServerNetworkError} from "../../helpers/error-helpers";
+import {handleServerAppError, handleServerNetworkError} from "../../helpers/error-helpers";
 
 
 let initialState: Array<TodoDomainType> = []
@@ -57,32 +57,40 @@ export const getTodoLists = ():RootThunkType => async dispatch => {
 }
 export const deleteFetchedTodolist = (todolistId: string):RootThunkType => async dispatch => {
         try {
+            dispatch(setStatus('loading'))
             let {data} = await toDoAPI.deleteTodo(todolistId)
             if (data.resultCode === 0) {
                 dispatch(removeTodoListAC(todolistId))
+                dispatch(setStatus('succeeded'))
             }
         } catch (e: any) {
-            console.warn('ERROR')
+            handleServerNetworkError(e,dispatch)
         }
 }
 export const updateFetchedTodoTitle = (todolistId: string, title: string):RootThunkType => async dispatch => {
         try {
+            dispatch(setStatus('loading'))
             let {data} = await toDoAPI.updateTodoTitle(todolistId, title)
             if (data.resultCode === 0) {
                 dispatch(changeTodoListTitleAC(todolistId, title))
+                dispatch(setStatus('succeeded'))
             }
         } catch (e: any) {
-            console.warn('ERROR')
+            handleServerNetworkError(e,dispatch)
         }
 }
 export const createTodolist = (title: string):RootThunkType => async dispatch => {
         try {
             dispatch(setStatus('loading'))
-            let {data} = await toDoAPI.createTodo(title)
-            dispatch(addTodoListAC(data.item))
-            dispatch(setStatus('succeeded'))
+            let data = await toDoAPI.createTodo(title)
+            if (data.resultCode === 0) {
+                dispatch(addTodoListAC(data.data.item))
+                dispatch(setStatus('succeeded'))
+            } else {
+                handleServerAppError(data, dispatch)
+            }
         } catch (e: any) {
-            console.warn('ERROR')
+            handleServerNetworkError(e,dispatch)
         }
 }
 
