@@ -11,13 +11,14 @@ type TaskPropsType = {
     changeTaskTitle: (taskId: string, title: string) => void
     changeTaskStatus: (taskId: string, status: TaskStatuses) => void
     removeTask: (taskId: string) => void
+    todolistId:string
 }
 
 export const Task: FC<TaskPropsType> = React.memo(({
                                                        task,
                                                        changeTaskTitle,
                                                        changeTaskStatus,
-                                                       removeTask
+                                                       removeTask,todolistId
                                                    }) => {
 
     const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {

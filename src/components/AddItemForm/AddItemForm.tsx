@@ -5,9 +5,10 @@ import {AddBox} from "@mui/icons-material";
 
 type AddItemFormPropsType = {
     callBack: (value: string) => void
+    disabled?: boolean
 }
 
-export const AddItemForm = React.memo(({callBack,}: AddItemFormPropsType) => {
+export const AddItemForm = React.memo(({callBack,disabled = false}: AddItemFormPropsType) => {
 
     const [newTaskTitle, setNewTaskTitle] = useState("")
     const [error, setError] = useState<string | null>(null)
@@ -39,6 +40,7 @@ export const AddItemForm = React.memo(({callBack,}: AddItemFormPropsType) => {
     return (
         <div>
             <TextField variant={"outlined"}
+                       disabled={disabled}
                        value={newTaskTitle}
                        size={"small"}
                        color={'secondary'}
@@ -54,7 +56,7 @@ export const AddItemForm = React.memo(({callBack,}: AddItemFormPropsType) => {
                        }}
             />
 
-            <IconButton onClick={addItem} color={"secondary"}>
+            <IconButton onClick={addItem} color={"secondary"} disabled={disabled}>
                 <AddBox color={"inherit"}/>
             </IconButton>
 

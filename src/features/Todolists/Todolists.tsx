@@ -26,10 +26,8 @@ export const TodoLists = () => {
             <Grid item key={tl.id}>
                 <Paper elevation={2} sx={{padding: "10px"}}>
                     <Todolist
+                        todolist={tl}
                         key={tl.id}
-                        id={tl.id}
-                        title={tl.title}
-                        filter={tl.filter}
                         tasks={tasksForRender}
                     />
                 </Paper>

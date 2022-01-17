@@ -7,7 +7,7 @@ import {Button, List, Typography} from "@mui/material";
 import {
     changeTodoListFilterAC,
     deleteFetchedTodolist,
-    FilterValuesType,
+    FilterValuesType, TodoDomainType,
     updateFetchedTodoTitle
 } from "../todo-reducer";
 import {Task} from "./Task/Task";
@@ -22,19 +22,17 @@ import {
 import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
 
 
-type toDoListPropsType = {
-    id: string
-    filter: FilterValuesType
-    title: string
+type TodoListPropsType = {
+    todolist: TodoDomainType
     tasks: Array<ResponseTaskType>
 }
 
-export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsType) => {
-
+export const Todolist = React.memo(({todolist, tasks}: TodoListPropsType) => {
+    const {id, filter, entityStatus, title,} = todolist
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getTasks(id))
+        dispatch(getTasks(todolist.id))
     }, [])
 
     const removeTask = useCallback((taskId: string) => {
@@ -46,8 +44,8 @@ export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsTyp
     }, [dispatch, id])
 
     const changeTaskStatus = useCallback((taskId: string, status: TaskStatuses) => {
-        dispatch(updateFetchedTaskStatus(id,taskId, status))
-    }, [dispatch,id])
+        dispatch(updateFetchedTaskStatus(id, taskId, status))
+    }, [dispatch, id])
 
     const changeTodolistTitle = useCallback((title: string) => {
         dispatch(updateFetchedTodoTitle(id, title))
@@ -77,6 +75,7 @@ export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsTyp
 
     const tasksElements = taskForTodolist.map(t => {
         return <Task changeTaskStatus={changeTaskStatus}
+                     todolistId={id}
                      task={t}
                      changeTaskTitle={changeTaskTitle}
                      removeTask={removeTask}
@@ -87,11 +86,11 @@ export const Todolist = React.memo(({id, filter, title, tasks}: toDoListPropsTyp
         <div>
             <Typography variant="h6" align={'center'}>
                 <EditableSpan title={title} callBack={changeTodolistTitle}/>
-                <IconButton color={"secondary"} onClick={removeTodolist}>
+                <IconButton color={"secondary"} onClick={removeTodolist} disabled={entityStatus === 'loading'}>
                     <DeleteIcon/>
                 </IconButton>
             </Typography>
-            <AddItemForm callBack={addTask}/>
+            <AddItemForm callBack={addTask} disabled={entityStatus === 'loading'}/>
             <List>
                 {tasksElements}
             </List>

@@ -1,7 +1,7 @@
 import {ResponseTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../../api/tasksApi";
 import {AddTodoListACType, RemoveTodoListACType, SetTodoListsACType} from "./todo-reducer";
 import {RootReducerType, RootThunkType} from "../../app/Redux-store";
-import {setError, SetErrorActionType, setStatus} from "../../app/app-reducer";
+import {SetErrorActionType, setAppStatus} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../helpers/error-helpers";
 
 
@@ -81,25 +81,23 @@ export const setTaskAC = (tasks: Array<ResponseTaskType>, todoListId: string) =>
 //Thunk Creators
 export const getTasks = (todoListId: string):RootThunkType => async dispatch => {
         try {
-            dispatch(setStatus('loading'))
+            dispatch(setAppStatus('loading'))
             let data = await tasksAPI.getTasks(todoListId)
             if (data.error === null) {
                 dispatch(setTaskAC(data.items, todoListId))
-                dispatch(setStatus('succeeded'))
+                dispatch(setAppStatus('succeeded'))
             }
         } catch (e: any) {
-            dispatch (setError('Something wrong. Try later'))
-            console.warn(e)
-            // handleServerNetworkError(e,dispatch)
+            handleServerNetworkError(e,dispatch)
         }
 }
 export const deleteTask = (taskId: string, todolistId: string):RootThunkType => async dispatch => {
         try {
-            dispatch(setStatus('loading'))
+            dispatch(setAppStatus('loading'))
             let {data} = await tasksAPI.deleteTask(todolistId, taskId)
             if (data.resultCode === 0) {
                 dispatch(removeTaskAC(taskId, todolistId))
-                dispatch(setStatus('succeeded'))
+                dispatch(setAppStatus('succeeded'))
             } else {
                 handleServerAppError(data,dispatch)
             }
@@ -109,11 +107,11 @@ export const deleteTask = (taskId: string, todolistId: string):RootThunkType => 
 }
 export const createFetchedTask = (title: string, todolistId: string):RootThunkType => async dispatch => {
         try {
-            dispatch(setStatus('loading'))
+            dispatch(setAppStatus('loading'))
             let {data} = await tasksAPI.createTask(todolistId, title)
             if (data.resultCode === 0) {
                 dispatch(addTaskAC(data.data.item))
-                dispatch(setStatus('succeeded'))
+                dispatch(setAppStatus('succeeded'))
             } else {
                 handleServerAppError(data,dispatch)
             }
@@ -138,11 +136,11 @@ export const updateFetchedTaskStatus = (todolistId: string, taskId: string, stat
             startDate: task.startDate,
         }
         try {
-            dispatch(setStatus('loading'))
+            dispatch(setAppStatus('loading'))
            let {data} = await tasksAPI.updateTaskStatus(todolistId, taskId, model)
             if (data.resultCode === 0) {
                 dispatch(changeTaskStatusAC(status, taskId, todolistId))
-                dispatch(setStatus('succeeded'))
+                dispatch(setAppStatus('succeeded'))
             } else {
                 handleServerAppError(data,dispatch)
             }
@@ -167,11 +165,11 @@ export const updateFetchedTaskTitle = (todolistId: string, taskId: string, title
             startDate: task.startDate,
         }
         try {
-            dispatch(setStatus('loading'))
+            dispatch(setAppStatus('loading'))
             let {data} = await tasksAPI.updateTaskTitle(todolistId, taskId, model)
             if (data.resultCode === 0) {
                 dispatch(changeTaskTitleAC(title, taskId, todolistId))
-                dispatch(setStatus('succeeded'))
+                dispatch(setAppStatus('succeeded'))
             } else {
                 handleServerAppError(data,dispatch)
             }
