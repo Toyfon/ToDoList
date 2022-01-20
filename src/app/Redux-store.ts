@@ -4,19 +4,21 @@ import {TodoActionsType, toDoReducer} from "../features/Todolists/todo-reducer";
 import {TypedUseSelectorHook, useSelector} from "react-redux";
 import thunk, {ThunkAction} from "redux-thunk";
 import {AppActionsType, appReducer} from "./app-reducer";
+import {AuthActionType, authReducer} from "../Login/auth-reducer";
 
 export type RootReducerType = ReturnType<typeof rootReducer>
 
 const rootReducer = combineReducers({
     tasks: taskReducer,
     todoLists: toDoReducer,
-    app:appReducer
+    app:appReducer,
+    auth: authReducer
 })
 
 export let store = createStore(rootReducer, applyMiddleware(thunk))
 
 
-export type RootAppActions = TodoActionsType | AppActionsType | TaskActionsType
+export type RootAppActions = TodoActionsType | AppActionsType | TaskActionsType | AuthActionType
 
 //ThunkAction<any,any, any, any>
 //1. what returned function (void)
