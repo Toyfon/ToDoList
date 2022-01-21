@@ -6,17 +6,24 @@ import {TaskStateType} from "./task-reducer";
 import {useDispatch} from "react-redux";
 import {Todolist} from "./Todolist/Todolist";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
+import {Navigate} from "react-router-dom";
 
 
 export const TodoLists = () => {
 
     const todoLists = useTypedSelector<TodoDomainType[]>(state => state.todoLists)
     const tasks = useTypedSelector<TaskStateType>(state => state.tasks)
+    const isLoggedIn = useTypedSelector<boolean>(state => state.auth.isLoggedIn)
+
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getTodoLists())
+        if (!isLoggedIn) {
+            return
+        } else {
+            dispatch(getTodoLists())
+        }
     }, [])
 
     const addTodolist = useCallback((title: string) => {
@@ -38,13 +45,18 @@ export const TodoLists = () => {
         )
     })
 
-    return (<>
-    <Grid container sx={{padding: "20px 0", marginBottom: "30px"}}>
-        <AddItemForm callBack={addTodolist}/>
-    </Grid>
-    <Grid container spacing={4}>
-        {todolistComponents}
-    </Grid>
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
+
+    return (
+        <>
+            <Grid container sx={{padding: "20px 0", marginBottom: "30px"}}>
+                <AddItemForm callBack={addTodolist}/>
+            </Grid>
+            <Grid container spacing={4}>
+                {todolistComponents}
+            </Grid>
         </>
-)
+    )
 }

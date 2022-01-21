@@ -3,16 +3,12 @@ import {CommonResponseType} from "../api/tasksApi";
 import {Dispatch} from "redux";
 
 
-export const handleServerAppError = <T>(data:CommonResponseType<T>, dispatch:ErrorHelpersDispatchType) => {
-    if (data.messages.length) {
-        dispatch(setAppError(data.messages[0]))
-    } else {
-        dispatch(setAppError("Something wrong! Try later"))
-    }
+export const handleServerAppError = <T>(data: CommonResponseType<T>, dispatch: ErrorHelpersDispatchType) => {
+    dispatch(setAppError(data.messages.length ? data.messages[0]: "Something wrong. Try later!"))
     dispatch(setAppStatus('failed'))
 }
 
-export const handleServerNetworkError = (error: {message: string}, dispatch:ErrorHelpersDispatchType) => {
+export const handleServerNetworkError = (error: { message: string }, dispatch: ErrorHelpersDispatchType) => {
     dispatch(setAppError(error.message ? error.message : "Some error occurred"))
     dispatch(setAppStatus('failed'))
 }
