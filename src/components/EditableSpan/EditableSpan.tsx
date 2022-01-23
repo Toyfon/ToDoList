@@ -1,14 +1,17 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {IconButton, TextField} from "@mui/material";
 import {ModeEditOutline} from "@mui/icons-material";
+import {ThemeType} from "../../app/app-reducer";
+import s from './EditableSpan.module.css'
 
 
 type EditableSpanPropsType = {
     title: string
     callBack: (title: string) => void
+    theme?: ThemeType
 }
 
-export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
+export const EditableSpan = React.memo(({theme, ...props}: EditableSpanPropsType) => {
     const [editMode, setEditMode] = useState(false)
     const [title, setTitle] = useState("")
 
@@ -34,8 +37,9 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
 
     return (
         editMode
-            ? <TextField variant={'standard'}
-                         sx={{width: "130px"}}
+            ? <TextField
+                         variant={'standard'}
+                         sx={{width: "130px", color: "white"}}
                          value={title}
                          color={"secondary"}
                          onBlur={offEditMode}
@@ -43,7 +47,7 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
                          onChange={onChangeTitleHandler}
                          onKeyPress={onKeyPressHandler}/>
             : <span onDoubleClick={onEditMode}>{props.title}
-                <IconButton onClick={onEditMode}>
+                <IconButton onClick={onEditMode} sx={{color: theme === 'light' ? '#4a4848' : 'white'}}>
                     <ModeEditOutline fontSize={"small"}/>
                 </IconButton>
         </span>

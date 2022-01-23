@@ -20,6 +20,8 @@ import {
     updateFetchedTaskTitle
 } from "../task-reducer";
 import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
+import {useTypedSelector} from "../../../app/Redux-store";
+import {ThemeType} from "../../../app/app-reducer";
 
 
 type TodoListPropsType = {
@@ -30,6 +32,7 @@ type TodoListPropsType = {
 export const Todolist = React.memo(({todolist, tasks}: TodoListPropsType) => {
     const {id, filter, entityStatus, title,} = todolist
     const dispatch = useDispatch()
+    const theme = useTypedSelector<ThemeType>(state => state.app.theme)
 
     useEffect(() => {
         dispatch(getTasks(todolist.id))
@@ -85,12 +88,17 @@ export const Todolist = React.memo(({todolist, tasks}: TodoListPropsType) => {
     return (
         <div>
             <Typography variant="h6" align={'center'}>
-                <EditableSpan title={title} callBack={changeTodolistTitle}/>
-                <IconButton color={"secondary"} onClick={removeTodolist} disabled={entityStatus === 'loading'}>
+                <EditableSpan title={title} callBack={changeTodolistTitle} theme={theme}/>
+                <IconButton color={"secondary"} onClick={removeTodolist}
+                            disabled={entityStatus === 'loading'}
+                            sx={{color: theme === 'light' ? '#4a4848' : 'white'}}
+                >
                     <DeleteIcon/>
                 </IconButton>
             </Typography>
-            <AddItemForm callBack={addTask} disabled={entityStatus === 'loading'}/>
+            <AddItemForm callBack={addTask}
+                         theme={theme}
+                         disabled={entityStatus === 'loading'}/>
             <List>
                 {tasksElements}
             </List>

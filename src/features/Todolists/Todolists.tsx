@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {Todolist} from "./Todolist/Todolist";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Navigate} from "react-router-dom";
+import {ThemeType} from "../../app/app-reducer";
 
 
 export const TodoLists = () => {
@@ -14,6 +15,7 @@ export const TodoLists = () => {
     const todoLists = useTypedSelector<TodoDomainType[]>(state => state.todoLists)
     const tasks = useTypedSelector<TaskStateType>(state => state.tasks)
     const isLoggedIn = useTypedSelector<boolean>(state => state.auth.isLoggedIn)
+    const theme = useTypedSelector<ThemeType>(state => state.app.theme)
 
 
     const dispatch = useDispatch()
@@ -34,7 +36,12 @@ export const TodoLists = () => {
         let tasksForRender = tasks[tl.id]
         return (
             <Grid item key={tl.id}>
-                <Paper elevation={2} sx={{padding: "10px"}}>
+                <Paper elevation={2}
+                       sx={{
+                           padding: "10px",
+                           backgroundColor: theme === 'light' ? '#e3e3e3' : '#2d2828',
+                           border: theme === 'dark' ? '1px solid white' : ''
+                       }}>
                     <Todolist
                         todolist={tl}
                         key={tl.id}
@@ -52,7 +59,7 @@ export const TodoLists = () => {
     return (
         <>
             <Grid container sx={{padding: "20px 0", marginBottom: "30px"}}>
-                <AddItemForm callBack={addTodolist}/>
+                <AddItemForm callBack={addTodolist} theme={theme}/>
             </Grid>
             <Grid container spacing={4}>
                 {todolistComponents}

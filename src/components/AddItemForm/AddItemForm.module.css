@@ -1,0 +1,14 @@
+.darkTextField input {
+   color: white;
+}
+.darkTextField label {
+   color: white;
+}
+
+.lightTextField input {
+   color: black;
+}
+.lightTextField label {
+   color: black;
+}
+
