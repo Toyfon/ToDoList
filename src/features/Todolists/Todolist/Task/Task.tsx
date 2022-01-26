@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {ResponseTaskType, TaskStatuses} from "../../../../api/tasksApi";
 import {useTypedSelector} from "../../../../app/Redux-store";
 import {ThemeType} from "../../../../app/app-reducer";
+import {brown, grey} from "@mui/material/colors";
 
 
 type TaskPropsType = {
@@ -40,8 +41,15 @@ export const Task: FC<TaskPropsType> = React.memo(({
             sx={{paddingTop: "0px,3px", display: "flex", justifyContent: "space-between"}}
             key={task.id}
             className={task.status === TaskStatuses.Completed ? "isDone" : ""}>
-            <Checkbox checked={task.status === TaskStatuses.Completed} color={'secondary'}
-                      onChange={changeTaskStatusHandler}/>
+            <Checkbox checked={task.status === TaskStatuses.Completed}
+                      onChange={changeTaskStatusHandler}
+                      sx={{
+                          color: theme === 'light' ? brown[800] : grey[50],
+                          '&.Mui-checked': {
+                              color: theme === 'light' ? brown[600]: grey[50],
+                          },
+                      }}
+            />
             <EditableSpan title={task.title} callBack={changeTaskTitleHandler} theme={theme}/>
             <IconButton onClick={() => removeTask(task.id)}
                         sx={{color: theme === 'light' ? '#4a4848' : 'white'}}

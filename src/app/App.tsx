@@ -19,6 +19,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Login} from "../Login/Login";
 import {useDispatch} from "react-redux";
 import {logoutTC} from "../Login/auth-reducer";
+import {MaterialUISwitch} from "../components/MuiSwitch";
 
 
 export const App = () => {
@@ -27,7 +28,6 @@ export const App = () => {
     const theme = useTypedSelector<ThemeType>(state => state.app.theme)
     const isInitialized = useTypedSelector<boolean>(state => state.app.isInitialized)
     const isLoggedIn = useTypedSelector<boolean>(state => state.auth.isLoggedIn)
-
 
     const dispatch = useDispatch()
 
@@ -51,25 +51,28 @@ export const App = () => {
         </div>
     }
 
+    const colorTheme = theme === 'light' ? '#2d2828' : '#beb9b9'
+
     return (
         <BrowserRouter>
             <div className={theme === "light" ? 'light' : 'dark'}>
-                <AppBar position="static" sx={{backgroundColor: theme === "light" ? '#4a4848' : '#e3e3e3'}}>
+                <AppBar position="static" sx={{backgroundColor: theme === "light" ? '#898686' : '#262626'}}>
                     <Toolbar>
                         <IconButton size="large" edge="start" color="inherit"
-                                    aria-label="menu" sx={{mr: 2, color:theme === "light" ? 'white' : '#2d2828'}}>
+                                    aria-label="menu" sx={{mr: 2, color:colorTheme}}>
                             <MenuIcon/>
                         </IconButton>
                         <Typography variant="h6" component="div"
-                                    sx={{flexGrow: 1, color: theme === "light" ? 'white' : '#2d2828'}}>
+                                    sx={{flexGrow: 1, color:colorTheme}}>
                             TodoLists
                         </Typography>
-                        <Typography sx={{color: theme === "light" ? 'white' : '#2d2828'}}>
-                            {theme === 'light' ? 'Dark theme' : 'Light theme'}
-                        </Typography>
-                        <Switch onChange={changeThemeHandler} value={theme === 'light'}/>
+                        {/*<Typography sx={{color:colorTheme}}>*/}
+                        {/*    {theme === 'light' ? 'Dark theme' : 'Light theme'}*/}
+                        {/*</Typography>*/}
+                        <MaterialUISwitch onChange={changeThemeHandler} value={theme === 'light'}/>
+                        {/*<Switch onChange={changeThemeHandler} value={theme === 'light'}/>*/}
                         {isLoggedIn && <Button color="inherit" onClick={logoutHandler}
-                        sx={{color: theme === "light" ? 'white' : '#2d2828'}}>Log out</Button>}
+                        sx={{color: colorTheme}}>Log out</Button>}
                     </Toolbar>
                     {status === 'loading' && <LinearProgress color="inherit"/>}
                 </AppBar>

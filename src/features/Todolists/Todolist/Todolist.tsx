@@ -31,8 +31,9 @@ type TodoListPropsType = {
 
 export const Todolist = React.memo(({todolist, tasks}: TodoListPropsType) => {
     const {id, filter, entityStatus, title,} = todolist
-    const dispatch = useDispatch()
     const theme = useTypedSelector<ThemeType>(state => state.app.theme)
+    const dispatch = useDispatch()
+
 
     useEffect(() => {
         dispatch(getTasks(todolist.id))

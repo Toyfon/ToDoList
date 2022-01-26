@@ -19,6 +19,7 @@ export let store = createStore(rootReducer, applyMiddleware(thunk))
 
 
 export type RootAppActions = TodoActionsType | AppActionsType | TaskActionsType | AuthActionType
+//export type RootAppActions = ReturnType<typeof store.dispatch>
 
 //ThunkAction<any,any, any, any>
 //1. what returned function (void)

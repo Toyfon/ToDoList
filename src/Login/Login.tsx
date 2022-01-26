@@ -4,11 +4,13 @@ import {loginTC} from "./auth-reducer";
 import {useDispatch} from "react-redux";
 import {useTypedSelector} from "../app/Redux-store";
 import {Navigate} from "react-router-dom";
+import {ThemeType} from "../app/app-reducer";
 
 
 export const Login = () => {
     const dispatch = useDispatch()
     const isLoggedIn = useTypedSelector<boolean>(state => state.auth.isLoggedIn)
+    const theme = useTypedSelector<ThemeType>(state => state.app.theme)
 
 
 
@@ -44,7 +46,7 @@ export const Login = () => {
         <Grid item xs={4}>
             <form onSubmit={formik.handleSubmit}>
                 <FormControl>
-                    <FormLabel>
+                    <FormLabel sx={{color: theme === 'light'? 'black': 'white'}}>
                         <p>
                             To log in get registered <a href={'https://social-network.samuraijs.com/'}
                                                         target={'_blank'}>here</a>

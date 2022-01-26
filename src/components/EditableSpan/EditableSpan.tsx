@@ -46,7 +46,7 @@ export const EditableSpan = React.memo(({theme, ...props}: EditableSpanPropsType
                          autoFocus
                          onChange={onChangeTitleHandler}
                          onKeyPress={onKeyPressHandler}/>
-            : <span onDoubleClick={onEditMode}>{props.title}
+            : <span className={theme === 'light'? s.lightTheme : s.darkTheme} onDoubleClick={onEditMode}>{props.title}
                 <IconButton onClick={onEditMode} sx={{color: theme === 'light' ? '#4a4848' : 'white'}}>
                     <ModeEditOutline fontSize={"small"}/>
                 </IconButton>
