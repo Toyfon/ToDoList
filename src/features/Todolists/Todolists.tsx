@@ -1,13 +1,16 @@
-import {Grid, Paper} from "@mui/material";
 import React, {useCallback, useEffect} from "react";
 import {useTypedSelector} from "../../app/Redux-store";
+import {useDispatch} from "react-redux";
+import {Navigate} from "react-router-dom";
+
+import {Grid, Paper} from "@mui/material";
+
 import {createTodolist, getTodoLists, TodoDomainType} from "./todo-reducer";
 import {TaskStateType} from "./task-reducer";
-import {useDispatch} from "react-redux";
+import {ThemeType} from "../../app/app-reducer";
 import {Todolist} from "./Todolist/Todolist";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
-import {Navigate} from "react-router-dom";
-import {ThemeType} from "../../app/app-reducer";
+
 
 
 export const TodoLists = () => {
@@ -53,7 +56,7 @@ export const TodoLists = () => {
     })
 
     if (!isLoggedIn) {
-        return <Navigate to={'/login'}/>
+        return <Navigate to={'login'}/>
     }
 
     return (

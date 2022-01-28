@@ -2,6 +2,7 @@ import {RootThunkType} from "./Redux-store";
 import {authApi} from "../api/authApi";
 import {handleServerAppError, handleServerNetworkError} from "../helpers/error-helpers";
 import {setIsLoggedIn} from "../Login/auth-reducer";
+import {ResponseStatusCodes} from "../helpers/enum";
 
 const initState: InitStateType = {
     status: 'idle',
@@ -33,12 +34,6 @@ export const setAppStatus = (status: StatusType) => ({type: 'APP/SET-STATUS', st
 export const setAppInitialized = (value: boolean) => ({type: 'APP/SET-INITIALIZED', value} as const)
 export const setAppTheme = (theme: ThemeType) => ({type: 'APP/SET-THEME', theme} as const)
 
-//Enum
-enum ResponseStatusCodes {
-    success = 0,
-    error = 1,
-    captcha = 10
-}
 
 // thunk
 export const initializeApp = (): RootThunkType => async dispatch => {
@@ -49,9 +44,10 @@ export const initializeApp = (): RootThunkType => async dispatch => {
         } else {
             handleServerAppError(data, dispatch)
         }
-        dispatch(setAppInitialized(true))
     } catch (e: any) {
         handleServerNetworkError(e, dispatch)
+    } finally {
+        dispatch(setAppInitialized(true))
     }
 }
 

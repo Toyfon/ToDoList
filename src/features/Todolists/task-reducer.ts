@@ -1,9 +1,9 @@
 import {ResponseTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../../api/tasksApi";
 import {AddTodoListACType, RemoveTodoListACType, SetTodoListsACType} from "./todo-reducer";
 import {RootReducerType, RootThunkType} from "../../app/Redux-store";
-import {SetErrorActionType, setAppStatus} from "../../app/app-reducer";
+import {setAppStatus, SetErrorActionType} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../helpers/error-helpers";
-import {AxiosError} from "axios";
+import {ResponseStatusCodes} from "../../helpers/enum";
 
 
 export let initialState: TaskStateType = {}
@@ -78,14 +78,6 @@ export const changeTaskTitleAC = (title: string, taskId: string, todolistId: str
 export const setTaskAC = (tasks: Array<ResponseTaskType>, todoListId: string) =>
     ({type: 'TASKS/SET_TASKS', payload: {tasks, todoListId}} as const)
 
-
-//Enum
-
-enum ResponseStatusCodes {
-    success = 0,
-    error = 1,
-    captcha = 10
-}
 
 //Thunk Creators
 export const getTasks = (todoListId: string): RootThunkType => async dispatch => {

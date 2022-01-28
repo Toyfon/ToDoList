@@ -1,27 +1,25 @@
 import React, {useCallback, useEffect} from "react";
-import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
-import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
+import {useDispatch} from "react-redux";
+import {useTypedSelector} from "../../../app/Redux-store";
+
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, List, Typography} from "@mui/material";
-import {
-    changeTodoListFilterAC,
-    deleteFetchedTodolist,
-    FilterValuesType, TodoDomainType,
-    updateFetchedTodoTitle
-} from "../todo-reducer";
-import {Task} from "./Task/Task";
-import {useDispatch} from "react-redux";
-import {
-    createFetchedTask,
-    deleteTask,
-    getTasks,
-    updateFetchedTaskStatus,
-    updateFetchedTaskTitle
-} from "../task-reducer";
-import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
-import {useTypedSelector} from "../../../app/Redux-store";
+
+import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
+import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
+import { changeTodoListFilterAC, deleteFetchedTodolist,
+         FilterValuesType, TodoDomainType, updateFetchedTodoTitle} from "../todo-reducer";
+import { createFetchedTask, deleteTask, getTasks, updateFetchedTaskStatus,
+         updateFetchedTaskTitle} from "../task-reducer";
 import {ThemeType} from "../../../app/app-reducer";
+import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
+import {Task} from "./Task/Task";
+
+
+
+
+
 
 
 type TodoListPropsType = {

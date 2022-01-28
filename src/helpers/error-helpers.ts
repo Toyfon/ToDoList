@@ -1,6 +1,8 @@
+import {Dispatch} from "redux";
+
 import {setAppError, SetErrorActionType, setAppStatus, SetStatusActionType} from "../app/app-reducer";
 import {CommonResponseType} from "../api/tasksApi";
-import {Dispatch} from "redux";
+
 
 
 export const handleServerAppError = <T>(data: CommonResponseType<T>, dispatch: ErrorHelpersDispatchType) => {

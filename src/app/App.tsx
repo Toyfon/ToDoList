@@ -1,25 +1,28 @@
 import React, {ChangeEvent, useCallback, useEffect} from 'react';
-import './App.css'
-import {TodoLists} from "../features/Todolists/Todolists";
-import {
-    AppBar,
-    Button,
-    CircularProgress,
-    Container,
-    IconButton,
-    LinearProgress, Switch,
-    Toolbar,
-    Typography
-} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import {ErrorSnackbar} from "../components/ErrorSnackBar/ErrorSnackbar";
 import {useTypedSelector} from "./Redux-store";
-import {initializeApp, setAppTheme, StatusType, ThemeType} from "./app-reducer";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Login} from "../Login/Login";
 import {useDispatch} from "react-redux";
-import {logoutTC} from "../Login/auth-reducer";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import LinearProgress from "@mui/material/LinearProgress";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import MenuIcon from '@mui/icons-material/Menu';
 import {MaterialUISwitch} from "../components/MuiSwitch";
+
+import './App.css'
+import {initializeApp, setAppTheme, StatusType, ThemeType} from "./app-reducer";
+import {logoutTC} from "../Login/auth-reducer";
+import {ErrorSnackbar} from "../components/ErrorSnackBar/ErrorSnackbar";
+import {TodoLists} from "../features/Todolists/Todolists";
+import {Login} from "../Login/Login";
+import {Error404} from "../common/error404/Error404";
+
+
 
 
 export const App = () => {
@@ -33,11 +36,11 @@ export const App = () => {
 
     useEffect(() => {
         dispatch(initializeApp())
-    }, [])
+    }, [dispatch])
 
     const logoutHandler = useCallback(() => {
         dispatch(logoutTC())
-    }, [])
+    }, [dispatch])
 
 
     const changeThemeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,11 +69,7 @@ export const App = () => {
                                     sx={{flexGrow: 1, color:colorTheme}}>
                             TodoLists
                         </Typography>
-                        {/*<Typography sx={{color:colorTheme}}>*/}
-                        {/*    {theme === 'light' ? 'Dark theme' : 'Light theme'}*/}
-                        {/*</Typography>*/}
                         <MaterialUISwitch onChange={changeThemeHandler} value={theme === 'light'}/>
-                        {/*<Switch onChange={changeThemeHandler} value={theme === 'light'}/>*/}
                         {isLoggedIn && <Button color="inherit" onClick={logoutHandler}
                         sx={{color: colorTheme}}>Log out</Button>}
                     </Toolbar>
@@ -79,7 +78,9 @@ export const App = () => {
                 <Container fixed>
                     <Routes>
                         <Route path={'/'} element={<TodoLists/>}/>
-                        <Route path={'/login'} element={<Login/>}/>
+                        <Route path={'login'} element={<Login/>}/>
+                        <Route path={'404'} element={<Error404/>}/>
+                        <Route path={'*'} element={<Navigate to={'404'}/>}/>
                     </Routes>
                 </Container>
                 <ErrorSnackbar/>

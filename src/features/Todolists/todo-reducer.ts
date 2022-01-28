@@ -1,7 +1,9 @@
-import {toDoAPI, TodoType} from "../../api/todoApi";
 import {RootThunkType} from "../../app/Redux-store";
+
+import {toDoAPI, TodoType} from "../../api/todoApi";
 import {setAppStatus, StatusType} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../helpers/error-helpers";
+import {ResponseStatusCodes} from "../../helpers/enum";
 
 
 let initialState: Array<TodoDomainType> = []
@@ -37,12 +39,6 @@ export const changeTodoListEntityStatusAC = (id: string, entityStatus: StatusTyp
     type: "TODOS/CHANGE-TODOLIST_ENTITY_STATUS", payload: {entityStatus, id}} as const)
 
 
-//Enum
-enum ResponseStatusCodes {
-    success = 0,
-    error = 1,
-    captcha = 10
-}
 //Thunk Creators
 export const getTodoLists = ():RootThunkType => async dispatch => {
         try {

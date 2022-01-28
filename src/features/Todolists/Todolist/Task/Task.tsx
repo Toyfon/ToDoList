@@ -1,12 +1,15 @@
 import React, {ChangeEvent, FC, useCallback} from "react";
+import {useTypedSelector} from "../../../../app/Redux-store";
+
 import {Checkbox, ListItem} from "@mui/material";
-import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {ResponseTaskType, TaskStatuses} from "../../../../api/tasksApi";
-import {useTypedSelector} from "../../../../app/Redux-store";
-import {ThemeType} from "../../../../app/app-reducer";
 import {brown, grey} from "@mui/material/colors";
+
+import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan";
+import {ResponseTaskType, TaskStatuses} from "../../../../api/tasksApi";
+import {ThemeType} from "../../../../app/app-reducer";
+
 
 
 type TaskPropsType = {
@@ -21,7 +24,7 @@ export const Task: FC<TaskPropsType> = React.memo(({
                                                        task,
                                                        changeTaskTitle,
                                                        changeTaskStatus,
-                                                       removeTask,todolistId
+                                                       removeTask,
                                                    }) => {
 
     const theme = useTypedSelector<ThemeType>(state => state.app.theme)

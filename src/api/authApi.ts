@@ -8,17 +8,9 @@ const instance = axios.create({
     }
 })
 
-
-export type LoginParamsType = {
-    email: string
-    password: string
-    rememberMe: boolean
-    captcha?: string
-}
-
 export const authApi = {
     authMe() {
-        return instance.get<CommonResponseType<{ id: number, email: string, login: string }>>(`/auth/me`)
+        return instance.get<CommonResponseType<ResponseMeType>>(`/auth/me`)
     },
     login(params: LoginParamsType) {
         return instance.post<CommonResponseType<{ userId?: number }>>(`/auth/login`, params)
@@ -34,4 +26,18 @@ type CommonResponseType<T = {}> = {
     messages: string []
     fieldsErrors: string []
     data: T
+}
+
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe?: boolean
+    captcha?: string
+}
+
+
+export type ResponseMeType = {
+    id: number,
+    email: string,
+    login: string
 }

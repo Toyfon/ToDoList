@@ -1,8 +1,11 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+
 import {IconButton, TextField} from "@mui/material";
 import {ModeEditOutline} from "@mui/icons-material";
-import {ThemeType} from "../../app/app-reducer";
+
 import s from './EditableSpan.module.css'
+import {ThemeType} from "../../app/app-reducer";
+
 
 
 type EditableSpanPropsType = {
