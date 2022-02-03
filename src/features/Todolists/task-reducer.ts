@@ -1,5 +1,10 @@
 import {ResponseTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../../api/tasksApi";
-import {AddTodoListACType, RemoveTodoListACType, SetTodoListsACType} from "./todo-reducer";
+import {
+    AddTodoListACType,
+    clearReduxStateACType,
+    RemoveTodoListACType,
+    SetTodoListsACType
+} from "./todo-reducer";
 import {RootReducerType, RootThunkType} from "../../app/Redux-store";
 import {setAppStatus, SetErrorActionType} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../helpers/error-helpers";
@@ -39,12 +44,14 @@ export const taskReducer = (state = initialState, action: TaskActionsType): Task
             delete copyState[action.payload.id]
             return copyState
         case 'TODOS/SET-TODOS': {
-            const stateCopy = {...state}
+            const copyState = {...state}
             action.todos.forEach((tl) => {
-                stateCopy[tl.id] = []
+                copyState[tl.id] = []
             })
-            return stateCopy;
+            return copyState;
         }
+        case "TODOS/CLEAR-TODOS-DATA":
+            return  {}
         default:
             return state
     }
@@ -191,6 +198,7 @@ export type TaskActionsType =
     | AddTodoListACType
     | RemoveTodoListACType
     | SetErrorActionType
+    | clearReduxStateACType
 
 export type TaskStateType = {
     [key: string]: Array<ResponseTaskType>

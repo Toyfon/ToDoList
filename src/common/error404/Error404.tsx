@@ -10,3 +10,4 @@ export const Error404 = () => {
       </NavLink>
     </div>
 }
+

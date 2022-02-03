@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {useDispatch} from "react-redux";
 import {useTypedSelector} from "../../../app/Redux-store";
 
@@ -10,14 +10,11 @@ import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
 import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
 import { changeTodoListFilterAC, deleteFetchedTodolist,
          FilterValuesType, TodoDomainType, updateFetchedTodoTitle} from "../todo-reducer";
-import { createFetchedTask, deleteTask, getTasks, updateFetchedTaskStatus,
+import { createFetchedTask, deleteTask, updateFetchedTaskStatus,
          updateFetchedTaskTitle} from "../task-reducer";
 import {ThemeType} from "../../../app/app-reducer";
 import {ResponseTaskType, TaskStatuses} from "../../../api/tasksApi";
 import {Task} from "./Task/Task";
-
-
-
 
 
 
@@ -32,10 +29,6 @@ export const Todolist = React.memo(({todolist, tasks}: TodoListPropsType) => {
     const theme = useTypedSelector<ThemeType>(state => state.app.theme)
     const dispatch = useDispatch()
 
-
-    useEffect(() => {
-        dispatch(getTasks(todolist.id))
-    }, [])
 
     const removeTask = useCallback((taskId: string) => {
         dispatch(deleteTask(taskId, id))

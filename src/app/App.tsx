@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useEffect} from 'react';
 import {useTypedSelector} from "./Redux-store";
 import {useDispatch} from "react-redux";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
@@ -23,8 +23,6 @@ import {Login} from "../Login/Login";
 import {Error404} from "../common/error404/Error404";
 
 
-
-
 export const App = () => {
 
     const status = useTypedSelector<StatusType>(state => state.app.status)
@@ -38,15 +36,25 @@ export const App = () => {
         dispatch(initializeApp())
     }, [dispatch])
 
+    useEffect(() => {
+        const initThemeAsString = localStorage.getItem('theme')
+        if (initThemeAsString !== null) {
+            const initValue = JSON.parse(initThemeAsString)
+            dispatch(setAppTheme(initValue ? 'dark' : 'light'))
+        }
+        //eslint-disable-next-line
+    }, [])
+
     const logoutHandler = useCallback(() => {
         dispatch(logoutTC())
     }, [dispatch])
 
 
-    const changeThemeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const changeThemeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         let value = e.currentTarget.checked
         dispatch(setAppTheme(value ? 'dark' : 'light'))
-    }
+        localStorage.setItem('theme', JSON.stringify(value))
+    },[dispatch])
 
     if (!isInitialized) {
         return <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
@@ -57,34 +65,32 @@ export const App = () => {
     const colorTheme = theme === 'light' ? '#2d2828' : '#beb9b9'
 
     return (
-        <BrowserRouter>
-            <div className={theme === "light" ? 'light' : 'dark'}>
-                <AppBar position="static" sx={{backgroundColor: theme === "light" ? '#898686' : '#262626'}}>
-                    <Toolbar>
-                        <IconButton size="large" edge="start" color="inherit"
-                                    aria-label="menu" sx={{mr: 2, color:colorTheme}}>
-                            <MenuIcon/>
-                        </IconButton>
-                        <Typography variant="h6" component="div"
-                                    sx={{flexGrow: 1, color:colorTheme}}>
-                            TodoLists
-                        </Typography>
-                        <MaterialUISwitch onChange={changeThemeHandler} value={theme === 'light'}/>
-                        {isLoggedIn && <Button color="inherit" onClick={logoutHandler}
-                        sx={{color: colorTheme}}>Log out</Button>}
-                    </Toolbar>
-                    {status === 'loading' && <LinearProgress color="inherit"/>}
-                </AppBar>
-                <Container fixed>
-                    <Routes>
-                        <Route path={'/'} element={<TodoLists/>}/>
-                        <Route path={'login'} element={<Login/>}/>
-                        <Route path={'404'} element={<Error404/>}/>
-                        <Route path={'*'} element={<Navigate to={'404'}/>}/>
-                    </Routes>
-                </Container>
-                <ErrorSnackbar/>
-            </div>
-        </BrowserRouter>
+        <div className={theme === "light" ? 'light' : 'dark'}>
+            <AppBar position="static" sx={{backgroundColor: theme === "light" ? '#898686' : '#262626'}}>
+                <Toolbar>
+                    <IconButton size="large" edge="start" color="inherit"
+                                aria-label="menu" sx={{mr: 2, color: colorTheme}}>
+                        <MenuIcon/>
+                    </IconButton>
+                    <Typography variant="h6" component="div"
+                                sx={{flexGrow: 1, color: colorTheme}}>
+                        TodoLists
+                    </Typography>
+                    <MaterialUISwitch onChange={changeThemeHandler} checked={theme !== "light"} />
+                    {isLoggedIn && <Button onClick={logoutHandler}
+                                           sx={{color: colorTheme}}>Log out</Button>}
+                </Toolbar>
+                {status === 'loading' && <LinearProgress color="inherit"/>}
+            </AppBar>
+            <Container fixed>
+                <Routes>
+                    <Route path={'/'} element={<TodoLists/>}/>
+                    <Route path={'login'} element={<Login/>}/>
+                    <Route path={'404'} element={<Error404/>}/>
+                    <Route path={'*'} element={<Navigate to={'404'}/>}/>
+                </Routes>
+            </Container>
+            <ErrorSnackbar/>
+        </div>
     )
 }

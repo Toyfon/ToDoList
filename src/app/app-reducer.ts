@@ -8,7 +8,7 @@ const initState: InitStateType = {
     status: 'idle',
     error: null,
     theme: 'light',
-    isInitialized: false
+    isInitialized: false,
 }
 
 
@@ -66,8 +66,12 @@ export type SetErrorActionType = ReturnType<typeof setAppError>
 export type SetStatusActionType = ReturnType<typeof setAppStatus>
 export type SetInitializedActionType = ReturnType<typeof setAppInitialized>
 export type SetAppThemeActionType = ReturnType<typeof setAppTheme>
+
+
 export type AppActionsType = SetErrorActionType
     | SetStatusActionType
     | SetInitializedActionType
     | SetAppThemeActionType
+
+
 

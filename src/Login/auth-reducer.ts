@@ -3,6 +3,8 @@ import {RootThunkType} from "../app/Redux-store";
 import {setAppStatus} from "../app/app-reducer";
 import {authApi, LoginParamsType} from "../api/authApi";
 import {handleServerAppError, handleServerNetworkError} from "../helpers/error-helpers";
+import {clearReduxState} from "../features/Todolists/todo-reducer";
+import {ResponseStatusCodes} from "../helpers/enum";
 
 
 const initState: InitStateType = {
@@ -22,12 +24,6 @@ export const authReducer = (state: InitStateType = initState, action: AuthAction
 //action creators
 export const setIsLoggedIn = (value: boolean) => ({type: 'login/LOGGED_IN', payload: {value}} as const)
 
-//Enum
-enum ResponseStatusCodes {
-    success = 0,
-    error = 1,
-    captcha = 10
-}
 
 //Thunk creators
 export const loginTC = (params: LoginParamsType): RootThunkType => async dispatch => {
@@ -52,6 +48,7 @@ export const logoutTC = (): RootThunkType => async dispatch => {
         if (data.resultCode === ResponseStatusCodes.success) {
             dispatch(setIsLoggedIn(false))
             dispatch(setAppStatus('succeeded'))
+            dispatch(clearReduxState())
         } else {
             handleServerAppError(data, dispatch)
         }
